@@ -35,6 +35,8 @@ class Board:
         """
         Returns True if the column is full, False otherwise.
         """
+        if not 0 <= column < self.columns:
+            return True
         return self.board[0][column] != self.EMPTY
 
     def is_winner(self, symbol) -> bool:

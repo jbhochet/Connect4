@@ -1,5 +1,5 @@
 from board import Board
-
+from random import choice
 
 class Player:
     def play(self, symbol: str, board: Board) -> int:
@@ -19,3 +19,14 @@ class HumanPlayer(Player):
             except:
                 colx = -1
         return colx
+
+
+class RandomPlayer(Player):
+    def play(self, symbol: str, board: Board) -> int:
+        pos = []
+        
+        for column in range(board.columns):
+            if not board.is_column_full(column):
+                pos.append(column)
+
+        return choice(pos)

@@ -21,9 +21,11 @@ class Game:
         Return True if the game is ended, otherwise return False.
         """
         return any(
-            self.board.is_full(),
-            self.is_winner(Board.RED),
-            self.is_winner(Board.YELLOW),
+            [
+                self.board.is_full(),
+                self.is_winner(Board.RED),
+                self.is_winner(Board.YELLOW),
+            ]
         )
 
     def player_turn(self) -> None:
@@ -31,7 +33,8 @@ class Game:
         Starts the player's turn. The turn of the next_player.
         """
         player = self.next_player
-        colx = self.next_player.play()
+        symbol = self.__get_symbole_from_player(player)
+        colx = self.next_player.play(symbol, self.board)
         symbol = self.__get_symbole_from_player(player)
 
         if self.board.put_symbol(symbol, colx):
