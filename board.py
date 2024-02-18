@@ -1,3 +1,6 @@
+from copy import deepcopy
+
+
 class Board:
     RED = 'R'
     YELLOW = 'Y'
@@ -18,6 +21,12 @@ class Board:
         result += '|---' * self.columns + '|\n'
         result += '| ' + ' | '.join(str(i) for i in range(self.columns)) + ' |\n'
         return result
+
+    def copy(self):
+        """
+        Creates and returns a deep copy of the board.
+        """
+        return deepcopy(self)
 
     def put_symbol(self, symbol, column) -> bool:
         """

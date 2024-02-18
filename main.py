@@ -1,9 +1,9 @@
-from player import HumanPlayer, RandomPlayer
+from player import HumanPlayer, RandomPlayer, EasyAI
 from game import Game
 from board import Board
 
 player_r = RandomPlayer()
-player_y = RandomPlayer()
+player_y = EasyAI()
 
 game = Game(player_r, player_y)
 
@@ -20,6 +20,6 @@ elif game.is_winner(Board.YELLOW):
     winner = Board.YELLOW
 
 if winner is not None:
-    print(f"Player {winner} have win!")
+    print(f"Player {winner} has won !")
 else:
-    print("Game is a draw!")
+    print("Draw !")
