@@ -1,6 +1,7 @@
 from typing import Optional, Tuple
 from board import Board
 from random import choice
+from minimax import minimax
 
 
 class Player:
@@ -32,6 +33,11 @@ class RandomPlayer(Player):
                 pos.append(column)
 
         return choice(pos)
+
+class MMAIPlayer(Player):
+    def play(self, symbol: str, board: Board) -> int:
+        colx = minimax(board, symbol, 1)
+        return colx
 
 
 class EasyAI(Player):
