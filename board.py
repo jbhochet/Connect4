@@ -6,7 +6,7 @@ class Board:
     YELLOW = 'Y'
     EMPTY = ' '
 
-    def __init__(self, rows=6, columns=7) -> None:
+    def __init__(self, rows: int = 6, columns: int = 7) -> None:
         self.rows = rows
         self.columns = columns
         self.board = [[self.EMPTY for _ in range(columns)] for _ in range(rows)]
@@ -28,7 +28,7 @@ class Board:
         """
         return deepcopy(self)
 
-    def put_symbol(self, symbol, column) -> bool:
+    def put_symbol(self, symbol: str, column: int) -> bool:
         """
         Puts the symbol on the top of the column.
         Returns True if it's possible, False if the column is full.
@@ -40,7 +40,20 @@ class Board:
                 self.board[row][column] = symbol
                 return True
 
-    def is_column_full(self, column) -> bool:
+    def get_cell_value(self, row: int, column: int) -> str:
+        """
+        Returns the value of the cell at the given row and column.
+        """
+        return self.board[row][column]
+
+    def is_valid_position(self, row: int, column: int) -> bool:
+        """
+        Checks if the given position (row, col) is valid on the board.
+        Returns True if the position is valid, False otherwise.
+        """
+        return 0 <= row < self.rows and 0 <= column < self.columns
+
+    def is_column_full(self, column: int) -> bool:
         """
         Returns True if the column is full, False otherwise.
         """
@@ -48,7 +61,7 @@ class Board:
             return True
         return self.board[0][column] != self.EMPTY
 
-    def is_winner(self, symbol) -> bool:
+    def is_winner(self, symbol: str) -> bool:
         """
         Returns True if the symbol is the winner, False otherwise.
         """

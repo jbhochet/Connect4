@@ -10,15 +10,15 @@ class Game:
         # TODO: define the first player to play
         self.next_player = player_r
 
-    def __get_symbole_from_player(self, player: Player) -> str:
+    def __get_symbol_from_player(self, player: Player) -> str:
         if player == self.player_r:
             return Board.RED
         else:
             return Board.YELLOW
 
-    def is_ended(self) -> bool:
+    def has_ended(self) -> bool:
         """
-        Return True if the game is ended, otherwise return False.
+        Return True if the game has ended, otherwise return False.
         """
         return any(
             [
@@ -33,11 +33,11 @@ class Game:
         Starts the player's turn. The turn of the next_player.
         """
         player = self.next_player
-        symbol = self.__get_symbole_from_player(player)
-        colx = self.next_player.play(symbol, self.board)
-        symbol = self.__get_symbole_from_player(player)
+        symbol = self.__get_symbol_from_player(player)
+        column = self.next_player.play(symbol, self.board)
+        symbol = self.__get_symbol_from_player(player)
 
-        if self.board.put_symbol(symbol, colx):
+        if self.board.put_symbol(symbol, column):
             if player == self.player_y:
                 self.next_player = self.player_r
             else:

@@ -1,11 +1,10 @@
-from player import HumanPlayer, RandomPlayer, EasyAI, MMAIPlayer
+from player import *
 from game import Game
 from board import Board
 
-nb_game = 5
+nb_game = 10
 score_r = 0
 score_y = 0
-
 
 player_r = EasyAI()
 player_y = MMAIPlayer()
@@ -13,7 +12,7 @@ player_y = MMAIPlayer()
 for i in range(nb_game):
     game = Game(player_r, player_y)
 
-    while not game.is_ended():
+    while not game.has_ended():
         game.display()
         game.player_turn()
 
@@ -32,12 +31,12 @@ for i in range(nb_game):
     else:
         print("Draw !")
 
-
 ###############
 # Final results
 ###############
 
-print("===== Results: =====")
-print(f"Number of games: {nb_game}")
-print(f"Victories of RED: {score_r} ({score_r*100/nb_game}%)")
-print(f"Victories of YELLOW: {score_y} ({score_y*100/nb_game}%)")
+print()
+print("===== Results =====")
+print(f"Number of games : {nb_game}")
+print(f"Victories of RED : {score_r} ({score_r * 100 / nb_game}%)")
+print(f"Victories of YELLOW : {score_y} ({score_y * 100 / nb_game}%)")

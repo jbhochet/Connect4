@@ -1,4 +1,4 @@
-from player import HumanPlayer, RandomPlayer, EasyAI
+from player import *
 from game import Game
 from board import Board
 
@@ -7,7 +7,7 @@ player_y = EasyAI()
 
 game = Game(player_r, player_y)
 
-while not game.is_ended():
+while not game.has_ended():
     game.display()
     game.player_turn()
 
