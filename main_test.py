@@ -2,7 +2,7 @@ from player import *
 from game import Game
 from board import Board
 
-nb_game = 10
+nb_game = 30
 score_r = 0
 score_y = 0
 

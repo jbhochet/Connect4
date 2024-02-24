@@ -47,7 +47,7 @@ def min_value(board: Board, symbol: str, depth: int) -> float:
     v = inf
     for column in board_actions(board):
         board_cpy = board.copy()
-        board.put_symbol(opponent, column)
+        board_cpy.put_symbol(opponent, column)
         v = min(v, max_value(board_cpy, symbol, depth - 1))
     return v
 
@@ -62,10 +62,21 @@ def max_value(board: Board, symbol: str, depth: int) -> Tuple[int, int]:
     v = -inf
     for column in board_actions(board):
         board_cpy = board.copy()
-        board.put_symbol(symbol, column)
+        board_cpy.put_symbol(symbol, column)
         v = max(v, min_value(board_cpy, symbol, depth - 1))
     return v
 
+def count_win_move(board: Board, symbol: str) -> int:
+    """
+    Returns the number of winning moves on the board for the symbol.
+    """
+    res = 0
+    for colx in range(board.columns):
+        board_cpy = board.copy()
+        board_cpy.put_symbol(symbol, colx)
+        if board_cpy.is_winner(symbol):
+            res += 1
+    return res
 
 def eval_board(board: Board, symbol: str, depth) -> int:
     """
@@ -84,5 +95,7 @@ def eval_board(board: Board, symbol: str, depth) -> int:
     elif board.is_winner(opponent):
         return -(depth + 1) * 1000
     elif board.is_full():
-        return 1
-    return 1
+        return 0
+    else:
+        # Check the player's winning moves on the board
+        return count_win_move(board, symbol) - count_win_move(board, opponent)
