@@ -3,7 +3,7 @@ from game import Game
 from board import Board
 
 player_r = RandomPlayer()
-player_y = EasyAI()
+player_y = AlphaBetaPlayer()
 
 game = Game(player_r, player_y)
 

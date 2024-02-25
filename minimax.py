@@ -1,5 +1,5 @@
 from board import Board
-from typing import Tuple
+from typing import Any
 from math import inf
 from random import choice
 
@@ -52,7 +52,7 @@ def min_value(board: Board, symbol: str, depth: int) -> float:
     return v
 
 
-def max_value(board: Board, symbol: str, depth: int) -> Tuple[int, int]:
+def max_value(board: Board, symbol: str, depth: int) -> int | float | Any:
     """
     Maximise the symbol's gain by returning the action with the highest gain.
     The return value should be in the format of (column number, play value).
@@ -66,17 +66,19 @@ def max_value(board: Board, symbol: str, depth: int) -> Tuple[int, int]:
         v = max(v, min_value(board_cpy, symbol, depth - 1))
     return v
 
+
 def count_win_move(board: Board, symbol: str) -> int:
     """
     Returns the number of winning moves on the board for the symbol.
     """
     res = 0
-    for colx in range(board.columns):
+    for column in range(board.columns):
         board_cpy = board.copy()
-        board_cpy.put_symbol(symbol, colx)
+        board_cpy.put_symbol(symbol, column)
         if board_cpy.is_winner(symbol):
             res += 1
     return res
+
 
 def eval_board(board: Board, symbol: str, depth) -> int:
     """

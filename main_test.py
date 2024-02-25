@@ -6,7 +6,7 @@ nb_game = 30
 score_r = 0
 score_y = 0
 
-player_r = EasyAI()
+player_r = AlphaBetaPlayer()
 player_y = MMAIPlayer()
 
 for i in range(nb_game):
