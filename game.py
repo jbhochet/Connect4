@@ -1,5 +1,6 @@
 from player import Player
 from board import Board
+from colorama import just_fix_windows_console, Fore
 
 
 class Game:
@@ -49,8 +50,13 @@ class Game:
         """
         return self.board.is_winner(symbol)
 
-    def display(self) -> None:
+    def display(self, color: bool = True) -> None:
         """
         Print the board in the console.
         """
-        print(str(self.board))
+        just_fix_windows_console()
+        text_grid = str(self.board)
+        if color:
+            text_grid = text_grid.replace("R", Fore.RED + "●" + Fore.RESET)
+            text_grid = text_grid.replace("Y", Fore.YELLOW + "●" + Fore.RESET)
+        print(text_grid)
