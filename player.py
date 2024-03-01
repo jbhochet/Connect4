@@ -36,8 +36,11 @@ class RandomPlayer(Player):
 
 
 class MMAIPlayer(Player):
+    def __init__(self, depth = 1) -> None:
+        self.depth = depth
+
     def play(self, symbol: str, board: Board) -> int:
-        column = minimax(board, symbol, 1)
+        column = minimax(board, symbol, self.depth)
         return column
 
 

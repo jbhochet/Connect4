@@ -38,11 +38,16 @@ class Game:
         column = self.next_player.play(symbol, self.board)
         symbol = self.__get_symbol_from_player(player)
 
-        if self.board.put_symbol(symbol, column):
-            if player == self.player_y:
-                self.next_player = self.player_r
-            else:
-                self.next_player = self.player_y
+        try:
+            self.board.put_symbol(symbol, column)
+        except Exception as e:
+            print(e) # TODO: Remove
+            return
+        
+        if player == self.player_y:
+            self.next_player = self.player_r
+        else:
+            self.next_player = self.player_y
 
     def is_winner(self, symbol: str) -> bool:
         """

@@ -10,6 +10,7 @@ class Board:
         self.rows = rows
         self.columns = columns
         self.board = [[self.EMPTY for _ in range(columns)] for _ in range(rows)]
+        self.history = []
 
     def __str__(self) -> str:
         """
@@ -28,17 +29,33 @@ class Board:
         """
         return deepcopy(self)
 
-    def put_symbol(self, symbol: str, column: int) -> bool:
+    def put_symbol(self, symbol: str, column: int):
         """
         Puts the symbol on the top of the column.
         Returns True if it's possible, False if the column is full.
         """
-        if self.is_column_full(column):
-            return False
-        for row in range(self.rows - 1, -1, -1):
-            if self.board[row][column] == self.EMPTY:
-                self.board[row][column] = symbol
-                return True
+        assert not self.is_column_full(column), "The column is full!"
+        added = False
+        i = self.rows - 1
+        while i >= 0 and not added:
+            if self.board[i][column] == self.EMPTY:
+                self.board[i][column] = symbol
+                self.history.append(column)
+                added = True
+            i -= 1
+        assert added, "Symbol not added!"
+    
+    def undo(self):
+        assert (len(self.history) > 0), "Empty history!"
+        last = self.history.pop()
+        i = 0
+        reverted = False
+        while i < self.rows and not reverted:
+            if self.board[i][last] != Board.EMPTY:
+                self.board[i][last] = Board.EMPTY
+                reverted = True
+            i += 1
+        assert reverted, "Can't undo last move!"
 
     def get_cell_value(self, row: int, column: int) -> str:
         """

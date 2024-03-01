@@ -2,12 +2,12 @@ from player import *
 from game import Game
 from board import Board
 
-nb_game = 30
+nb_game = 2
 score_r = 0
 score_y = 0
 
-player_r = AlphaBetaPlayer()
-player_y = MMAIPlayer()
+player_r = MMAIPlayer(4)
+player_y = RandomPlayer()
 
 for i in range(nb_game):
     game = Game(player_r, player_y)

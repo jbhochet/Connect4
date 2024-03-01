@@ -17,9 +17,9 @@ def minimax(board: Board, symbol: str, depth: int) -> int:
     """
     actions = dict()
     for column in board_actions(board):
-        board_cpy = board.copy()
-        board_cpy.put_symbol(symbol, column)
-        actions[column] = min_value(board_cpy, symbol, depth)
+        board.put_symbol(symbol, column)
+        actions[column] = min_value(board, symbol, depth)
+        board.undo()
     max_val = max(actions.values())
     return choice([action[0] for action in actions.items() if action[1] == max_val])
 
@@ -46,9 +46,9 @@ def min_value(board: Board, symbol: str, depth: int) -> float:
     opponent = Board.RED if symbol is Board.YELLOW else Board.YELLOW
     v = inf
     for column in board_actions(board):
-        board_cpy = board.copy()
-        board_cpy.put_symbol(opponent, column)
-        v = min(v, max_value(board_cpy, symbol, depth - 1))
+        board.put_symbol(opponent, column)
+        v = min(v, max_value(board, symbol, depth - 1))
+        board.undo()
     return v
 
 
@@ -61,9 +61,9 @@ def max_value(board: Board, symbol: str, depth: int) -> int | float | Any:
         return eval_board(board, symbol, depth)
     v = -inf
     for column in board_actions(board):
-        board_cpy = board.copy()
-        board_cpy.put_symbol(symbol, column)
-        v = max(v, min_value(board_cpy, symbol, depth - 1))
+        board.put_symbol(symbol, column)
+        v = max(v, min_value(board, symbol, depth - 1))
+        board.undo()
     return v
 
 
@@ -72,11 +72,11 @@ def count_win_move(board: Board, symbol: str) -> int:
     Returns the number of winning moves on the board for the symbol.
     """
     res = 0
-    for column in range(board.columns):
-        board_cpy = board.copy()
-        board_cpy.put_symbol(symbol, column)
-        if board_cpy.is_winner(symbol):
+    for column in board_actions(board):
+        board.put_symbol(symbol, column)
+        if board.is_winner(symbol):
             res += 1
+        board.undo()
     return res
 
 
