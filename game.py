@@ -44,6 +44,7 @@ class Game:
         except Exception as e:
             # TODO: Remove | Just for debug
             traceback.print_exc()
+            return
         
         if player == self.player_y:
             self.next_player = self.player_r

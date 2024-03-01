@@ -12,6 +12,9 @@ class Player:
 
 
 class HumanPlayer(Player):
+    def __str__(self) -> str:
+        return "Human Player"
+    
     def play(self, symbol: str, board: Board) -> int:
         column = -1
         while column < 0:
@@ -25,6 +28,9 @@ class HumanPlayer(Player):
 
 
 class RandomPlayer(Player):
+    def __str__(self) -> str:
+        return "Random Player"
+    
     def play(self, symbol: str, board: Board) -> int:
         pos = []
 
@@ -38,6 +44,9 @@ class RandomPlayer(Player):
 class MMAIPlayer(Player):
     def __init__(self, depth = 1) -> None:
         self.depth = depth
+    
+    def __str__(self) -> str:
+        return f"MiniMax Player (depth: {self.depth})"
 
     def play(self, symbol: str, board: Board) -> int:
         column = minimax(board, symbol, self.depth)
@@ -45,9 +54,12 @@ class MMAIPlayer(Player):
 
 
 class AlphaBetaPlayer(Player):
-    def __init__(self, lookahead: int = 1) -> None:
-        self.lookahead = lookahead
+    def __init__(self, depth: int = 1) -> None:
+        self.depth = depth
+    
+    def __str__(self) -> str:
+        return f"Alpha Beta Player (depth: {self.depth})"
 
     def play(self, symbol: str, board: Board) -> int:
-        col = alphabeta(board, symbol, self.lookahead)
+        col = alphabeta(board, symbol, self.depth)
         return col
