@@ -1,43 +1,74 @@
 import random
-from typing import Tuple, Optional, List
+from typing import Tuple, List
+from math import inf
 from board import Board
+from minimax import terminal_test
 
 
-def alphabeta(board: Board, depth: int, alpha: float, beta: float, maximizing_player: bool, symbol: str) \
-        -> Tuple[float, Optional[int]]:
-    if depth == 0 or board.is_winner(Board.RED) or board.is_winner(Board.YELLOW) or board.is_full():
+def board_actions(board: Board):
+    middle = board.columns // 2
+
+    if board.columns % 2 != 0 and not board.is_column_full(middle):
+        yield middle
+
+    for i in range(middle):
+        i += 1
+        colums = [middle - i, middle + i]
+        if random.randint(0, 1) == 1:
+            colums.reverse()
+        for column in colums:
+            if not board.is_column_full(column):
+                yield column
+
+
+def max_value(board: Board, symbol: str, depth: int, alpha: float, beta: float) -> Tuple[float, int]:
+    if terminal_test(board, depth):
         return evaluate(board, symbol), None
 
-    if maximizing_player:
-        max_eval = float('-inf')
-        best_col = None
-        for col in get_ordered_columns(board):
-            if not board.is_column_full(col):
-                board_copy = board.copy()
-                board_copy.put_symbol(symbol, col)
-                evaluation, _ = alphabeta(board_copy, depth - 1, alpha, beta, False, symbol)
-                if evaluation > max_eval:
-                    max_eval = evaluation
-                    best_col = col
-                alpha = max(alpha, evaluation)
-                if beta <= alpha:
-                    break
-        return max_eval, best_col
-    else:
-        min_eval = float('inf')
-        best_col = None
-        for col in get_ordered_columns(board):
-            if not board.is_column_full(col):
-                board_copy = board.copy()
-                board_copy.put_symbol('R' if symbol == 'Y' else 'Y', col)
-                evaluation, _ = alphabeta(board_copy, depth - 1, alpha, beta, True, symbol)
-                if evaluation < min_eval:
-                    min_eval = evaluation
-                    best_col = col
-                beta = min(beta, evaluation)
-                if beta <= alpha:
-                    break
-        return min_eval, best_col
+    best_column = None
+    v = -inf
+    for column in board_actions(board):
+        board.put_symbol(symbol, column)
+        utility, _ = min_value(board, symbol, depth - 1, alpha, beta)
+        board.undo()
+        if v < utility:
+            v = utility
+            best_column = column
+
+        if v >= beta:
+            return v, best_column
+
+        alpha = max(alpha, v)
+
+    return v, best_column
+
+
+def min_value(board: Board, symbol: str, depth: int, alpha: float, beta: float) -> Tuple[float, int]:
+    if terminal_test(board, depth):
+        return evaluate(board, symbol), None
+
+    opponent = Board.RED if symbol is Board.YELLOW else Board.YELLOW
+    best_column = None
+    v = inf
+    for column in board_actions(board):
+        board.put_symbol(opponent, column)
+        utility, _ = max_value(board, symbol, depth - 1, alpha, beta)
+        board.undo()
+        if v > utility:
+            v = utility
+            best_column = column
+
+        if v <= alpha:
+            return v, best_column
+
+        beta = min(beta, v)
+
+    return v, best_column
+
+
+def alphabeta(board: Board, symbol: str, depth: int) -> int:
+    _, best_column = max_value(board, symbol, depth, -inf, inf)
+    return best_column
 
 
 def evaluate(board: Board, symbol: str) -> int:
@@ -107,14 +138,3 @@ def evaluate_window(window: List[str], player: str, opponent: str) -> int:
         score -= 4
 
     return score
-
-
-def get_ordered_columns(board: Board):
-    """
-    Return a list of columns ordered by preference (from center to sides).
-    """
-    center_col = board.columns // 2
-    columns = list(range(board.columns))
-    random.shuffle(columns)  # Shuffle to add randomness
-    columns.sort(key=lambda x: abs(x - center_col))  # Sort by distance from the center
-    return columns

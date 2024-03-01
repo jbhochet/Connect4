@@ -49,5 +49,5 @@ class AlphaBetaPlayer(Player):
         self.lookahead = lookahead
 
     def play(self, symbol: str, board: Board) -> int:
-        _, col = alphabeta(board, self.lookahead, float('-inf'), float('inf'), True, symbol)
+        col = alphabeta(board, symbol, self.lookahead)
         return col
