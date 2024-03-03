@@ -1,7 +1,8 @@
 from player import *
 from game import Game
 from board import Board
-from typing import Tuple
+from typing import Tuple, Type
+from player import MMAIPlayer, AlphaBetaPlayer
 
 
 ###############
@@ -18,7 +19,7 @@ def input_int(message: str):
     return res
 
 
-def get_ia_player_algo() -> Player:
+def get_ia_player_algo() -> Type[MMAIPlayer | AlphaBetaPlayer]:
     while True:
         print("Which algorithm would you like to use?")
         print("1) Minimax")

@@ -1,5 +1,5 @@
 import random
-from typing import Tuple, List
+from typing import Any
 from math import inf
 from board import Board
 from minimax import terminal_test
@@ -13,15 +13,16 @@ def board_actions(board: Board):
 
     for i in range(middle):
         i += 1
-        colums = [middle - i, middle + i]
+        column = [middle - i, middle + i]
         if random.randint(0, 1) == 1:
-            colums.reverse()
-        for column in colums:
+            column.reverse()
+        for column in column:
             if not board.is_column_full(column):
                 yield column
 
 
-def max_value(board: Board, symbol: str, depth: int, alpha: float, beta: float) -> Tuple[float, int]:
+def max_value(board: Board, symbol: str, depth: int, alpha: float, beta: float) \
+        -> tuple[int, None] | tuple[float, int | None]:
     if terminal_test(board, depth):
         return evaluate(board, symbol), None
 
@@ -43,7 +44,8 @@ def max_value(board: Board, symbol: str, depth: int, alpha: float, beta: float) 
     return v, best_column
 
 
-def min_value(board: Board, symbol: str, depth: int, alpha: float, beta: float) -> Tuple[float, int]:
+def min_value(board: Board, symbol: str, depth: int, alpha: float, beta: float) \
+        -> tuple[int, None] | tuple[float | Any, int | None]:
     if terminal_test(board, depth):
         return evaluate(board, symbol), None
 
@@ -94,47 +96,50 @@ def evaluate_position(board: Board, row: int, col: int, player: str, opponent: s
     score = 0
 
     # Check horizontal
-    for c in range(board.columns - 3):
-        window = [board.get_cell_value(row, c + i) for i in range(4)]
-        score += evaluate_window(window, player, opponent)
+    score += evaluate_direction(board, row, col, player, opponent, 0, 1)  # Right
+    score += evaluate_direction(board, row, col, player, opponent, 0, -1)  # Left
 
     # Check vertical
-    for r in range(board.rows - 3):
-        window = [board.get_cell_value(r + i, col) for i in range(4)]
-        score += evaluate_window(window, player, opponent)
+    score += evaluate_direction(board, row, col, player, opponent, 1, 0)  # Down
 
     # Check positive slope diagonal (/)
-    for r in range(board.rows - 3):
-        for c in range(board.columns - 3):
-            window = [board.get_cell_value(r + i, c + i) for i in range(4)]
-            score += evaluate_window(window, player, opponent)
+    score += evaluate_direction(board, row, col, player, opponent, 1, 1)  # Down-right
+    score += evaluate_direction(board, row, col, player, opponent, -1, -1)  # Up-left
 
     # Check negative slope diagonal (\)
-    for r in range(3, board.rows):
-        for c in range(board.columns - 3):
-            window = [board.get_cell_value(r - i, c + i) for i in range(4)]
-            score += evaluate_window(window, player, opponent)
+    score += evaluate_direction(board, row, col, player, opponent, 1, -1)  # Down-left
+    score += evaluate_direction(board, row, col, player, opponent, -1, 1)  # Up-right
 
     return score
 
 
-def evaluate_window(window: List[str], player: str, opponent: str) -> int:
+def evaluate_direction(board: Board, row: int, col: int, player: str, opponent: str, d_row: int, d_col: int) -> int:
     """
-    Evaluate a window of four cells.
+    Evaluate a specific direction (horizontal, vertical, diagonal) for the given player.
     """
     score = 0
-    count_player = window.count(player)
-    count_opponent = window.count(opponent)
-    count_empty = window.count(Board.EMPTY)
+    num_player_tokens = 0
+    num_empty_spaces = 0
 
-    if count_player == 4:
-        score += 100
-    elif count_player == 3 and count_empty == 1:
-        score += 5
-    elif count_player == 2 and count_empty == 2:
-        score += 2
+    # Count consecutive player tokens and empty spaces in the specified direction
+    for i in range(1, 4):
+        r = row + i * d_row
+        c = col + i * d_col
+        if board.is_valid_position(r, c):
+            cell_value = board.get_cell_value(r, c)
+            if cell_value == player:
+                num_player_tokens += 1
+            elif cell_value == opponent:
+                break  # Stop counting if opponent's token encountered
+            else:
+                num_empty_spaces += 1
 
-    if count_opponent == 3 and count_empty == 1:
-        score -= 4
+    # Evaluate based on the count of player tokens and empty spaces
+    if num_player_tokens == 3 and num_empty_spaces == 0:
+        score += 100  # Four in a row
+    elif num_player_tokens == 2 and num_empty_spaces == 1:
+        score += 5  # Three in a row with one empty space
+    elif num_player_tokens == 1 and num_empty_spaces == 2:
+        score += 2  # Two in a row with two empty spaces
 
     return score
