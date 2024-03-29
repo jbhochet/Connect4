@@ -2,12 +2,7 @@ from board import Board
 from typing import Any
 from math import inf
 from random import choice
-
-
-def board_actions(board: Board):
-    for column in range(board.columns):
-        if not board.is_column_full(column):
-            yield column
+from eval_tools import terminal_test, board_actions
 
 
 def minimax(board: Board, symbol: str, depth: int) -> int:
@@ -22,19 +17,6 @@ def minimax(board: Board, symbol: str, depth: int) -> int:
         board.undo()
     max_val = max(actions.values())
     return choice([action[0] for action in actions.items() if action[1] == max_val])
-
-
-def terminal_test(board: Board, depth: int) -> bool:
-    if depth == 0:
-        return True
-    if board.is_winner(Board.RED):
-        return True
-    if board.is_winner(Board.YELLOW):
-        return True
-    if board.is_full():
-        return True
-    return False
-
 
 def min_value(board: Board, symbol: str, depth: int) -> float:
     """

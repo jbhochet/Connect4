@@ -2,12 +2,13 @@ from player import *
 from game import Game
 from board import Board
 from typing import Tuple, Type
-from player import MMAIPlayer, AlphaBetaPlayer
+from player import EasyPlayer, MediumPlayer, HardPlayer
 
 
 ###############
 # Functions
 ###############
+
 
 def input_int(message: str):
     res = None
@@ -19,25 +20,23 @@ def input_int(message: str):
     return res
 
 
-def get_ia_player_algo() -> Type[MMAIPlayer | AlphaBetaPlayer]:
+def build_ia_player() -> Player:
     while True:
-        print("Which algorithm would you like to use?")
-        print("1) Minimax")
-        print("2) Alpha Beta")
+        print("Select the level of the AI.")
+        print("1) Easy")
+        print("2) Medium")
+        print("3) Hard")
 
-        n = input_int("Please input the algorithm number: ")
+        n = input_int("Please enter the AI difficulty number: ")
 
         if n == 1:
-            return MMAIPlayer
+            return EasyPlayer()
         elif n == 2:
-            return AlphaBetaPlayer
-
-
-def build_ia_player() -> Player:
-    print("Build a new AI player.")
-    ia_player_algo = get_ia_player_algo()
-    depth = input_int("Please enter the algorithm's depth: ")
-    return ia_player_algo(depth)
+            return MediumPlayer()
+        elif n == 3:
+            return HardPlayer()
+        else:
+            print("This level is not valid!")
 
 
 def create_players() -> Tuple[Player, Player]:
@@ -48,7 +47,7 @@ def create_players() -> Tuple[Player, Player]:
         print("3) AI vs AI")
 
         n = input_int("Please input the game mode number: ")
-    
+
         if n == 1:
             return HumanPlayer(), HumanPlayer()
         elif n == 2:

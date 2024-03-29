@@ -23,6 +23,7 @@ pkgs.mkShell {
     (pythonPackages.python.withPackages (ps: with ps; [
       pip
       black
+      snakeviz
       colorama
     ]))
   ];

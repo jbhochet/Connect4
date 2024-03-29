@@ -6,8 +6,8 @@ nb_game = 10
 score_r = 0
 score_y = 0
 
-player_r = MMAIPlayer(1)
-player_y = AlphaBetaPlayer(4)
+player_r = HardPlayer()
+player_y = MediumPlayer()
 
 for i in range(nb_game):
     game = Game(player_r, player_y)
