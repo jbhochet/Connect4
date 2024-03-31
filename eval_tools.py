@@ -5,6 +5,7 @@ from functools import lru_cache
 # Utility
 # ---------------
 
+
 def terminal_test(board: Board, depth: int) -> bool:
     if depth == 0:
         return True
@@ -34,74 +35,6 @@ def count_win_move(board: Board, symbol: str) -> int:
             res += 1
         board.undo()
     return res
-
-
-def eval_position(board: Board, symbol: str, row: int, col: int):
-    score = 0
-    temp_score = 0
-
-    me = symbol
-    opponent = Board.RED if me == Board.YELLOW else Board.YELLOW
-
-    results = []
-
-    # Check horizontal
-    if col + 3 < board.NB_COLUMNS:
-        for i in range(1, 4):
-            cell_val = board.get_cell_value(row, col + i)
-            if cell_val == me:
-                temp_score += 1
-            elif cell_val == opponent:
-                temp_score = 0
-                break
-
-    results.append(temp_score)
-
-    # Check horizontal
-    if row + 3 < board.NB_ROWS:
-        for i in range(1, 4):
-            cell_val = board.get_cell_value(row + i, col)
-            if cell_val == me:
-                temp_score += 1
-            elif cell_val == opponent:
-                temp_score = 0
-                break
-
-    results.append(temp_score)
-
-    # Check vertical positive
-    if row + 3 < board.NB_ROWS and col + 3 < board.NB_COLUMNS:
-        for i in range(1, 4):
-            cell_val = board.get_cell_value(row + i, col + i)
-            if cell_val == me:
-                temp_score += 1
-            elif cell_val == opponent:
-                temp_score = 0
-                break
-
-    results.append(temp_score)
-
-    # Check vertical negative
-    if row + 3 < board.NB_ROWS and col - 3 >= 0:
-        for i in range(1, 4):
-            cell_val = board.get_cell_value(row + i, col - i)
-            if cell_val == me:
-                temp_score += 1
-            elif cell_val == opponent:
-                temp_score = 0
-                break
-
-    results.append(temp_score)
-
-    for result in results:
-        if result == 1:
-            score += 5
-        elif result == 2:
-            score += 10
-        elif result == 3:
-            score += 100
-
-    return score
 
 
 # ---------------
@@ -140,6 +73,7 @@ def eval_medium(board: Board, symbol: str, depth: int):
 # ---------------
 # Hard
 # ---------------
+
 
 def eval_hard(board: Board, symbol: str, depth: int) -> int:
     me = symbol

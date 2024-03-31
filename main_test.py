@@ -7,7 +7,7 @@ score_r = 0
 score_y = 0
 
 player_r = HardPlayer()
-player_y = MediumPlayer()
+player_y = HardPlayer()
 
 for i in range(nb_game):
     game = Game(player_r, player_y)

@@ -55,7 +55,7 @@ class MediumPlayer(Player):
         return "Medium Player"
 
     def play(self, symbol: str, board: Board) -> int:
-        return alphabeta(board, symbol, 4, eval_tools.eval_medium)
+        return alphabeta(board, symbol, 3, eval_tools.eval_medium)
 
 
 class HardPlayer(Player):

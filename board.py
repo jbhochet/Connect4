@@ -146,7 +146,7 @@ class Board:
         assert 0 <= column < self.NB_COLUMNS
         return self.column_top_positions[column] < 0
 
-    def is_winner(self, symbol: str) -> Optional[str]:
+    def is_winner(self, symbol: str) -> bool:
         return self.__winner == symbol
 
     def is_full(self) -> bool:
