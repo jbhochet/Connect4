@@ -91,9 +91,7 @@ def eval_hard(board: Board, symbol: str, depth: int) -> int:
     return score
 
 
-def evaluate_position(
-    board: Board, row: int, col: int, player: str, opponent: str
-) -> int:
+def evaluate_position(board: Board, row: int, col: int, player: str, opponent: str) -> int:
     """
     Evaluate the position on the board for the given player.
     """
@@ -105,6 +103,7 @@ def evaluate_position(
 
     # Check vertical
     score += evaluate_direction(board, row, col, player, opponent, 1, 0)  # Down
+    score += evaluate_direction(board, row, col, player, opponent, -1, 0)  # Up
 
     # Check positive slope diagonal (/)
     score += evaluate_direction(board, row, col, player, opponent, 1, 1)  # Down-right
@@ -117,17 +116,16 @@ def evaluate_position(
     return score
 
 
-def evaluate_direction(
-    board: Board, row: int, col: int, player: str, opponent: str, d_row: int, d_col: int
-) -> int:
+def evaluate_direction(board: Board, row: int, col: int, player: str, opponent: str, d_row: int, d_col: int) -> int:
     """
     Evaluate a specific direction (horizontal, vertical, diagonal) for the given player.
     """
     score = 0
     num_player_tokens = 0
     num_empty_spaces = 0
+    num_opponent_tokens = 0
 
-    # Count consecutive player tokens and empty spaces in the specified direction
+    # Count consecutive player tokens, opponent tokens, and empty spaces in the specified direction
     for i in range(1, 4):
         r = row + i * d_row
         c = col + i * d_col
@@ -136,16 +134,24 @@ def evaluate_direction(
             if cell_value == player:
                 num_player_tokens += 1
             elif cell_value == opponent:
+                num_opponent_tokens += 1
                 break  # Stop counting if opponent's token encountered
             else:
                 num_empty_spaces += 1
 
-    # Evaluate based on the count of player tokens and empty spaces
+    # Evaluate based on the count of player tokens, opponent tokens, and empty spaces
     if num_player_tokens == 3 and num_empty_spaces == 0:
         score += 100  # Four in a row
     elif num_player_tokens == 2 and num_empty_spaces == 1:
-        score += 5  # Three in a row with one empty space
+        score += 20  # Three in a row with one empty space
     elif num_player_tokens == 1 and num_empty_spaces == 2:
-        score += 2  # Two in a row with two empty spaces
+        score += 10  # Two in a row with two empty spaces
+
+    if num_opponent_tokens == 3 and num_empty_spaces == 0:
+        score -= 100  # Opponent has four in a row
+    elif num_opponent_tokens == 2 and num_empty_spaces == 1:
+        score -= 20  # Opponent has three in a row with one empty space
+    elif num_opponent_tokens == 1 and num_empty_spaces == 2:
+        score -= 10  # Opponent has two in a row with two empty spaces
 
     return score
