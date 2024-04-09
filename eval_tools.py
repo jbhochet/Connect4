@@ -38,11 +38,11 @@ def count_win_move(board: Board, symbol: str) -> int:
 
 
 # ---------------
-# Easy
+# Eval 1
 # ---------------
 
 
-def eval_easy(board: Board, symbol: str, depth: int):
+def eval_1(board: Board, symbol: str, depth: int):
     me = symbol
     opponent = Board.RED if me == Board.YELLOW else Board.YELLOW
 
@@ -55,15 +55,15 @@ def eval_easy(board: Board, symbol: str, depth: int):
 
 
 # ---------------
-# Medium
+# Eval 2
 # ---------------
 
 
-def eval_medium(board: Board, symbol: str, depth: int):
+def eval_2(board: Board, symbol: str, depth: int):
     me = symbol
     opponent = Board.RED if me == Board.YELLOW else Board.YELLOW
 
-    result = eval_easy(board, symbol, depth)
+    result = eval_1(board, symbol, depth)
     if result != 0:
         return result
 
@@ -71,11 +71,11 @@ def eval_medium(board: Board, symbol: str, depth: int):
 
 
 # ---------------
-# Hard
+# Eval 3
 # ---------------
 
 
-def eval_hard(board: Board, symbol: str, depth: int) -> int:
+def eval_3(board: Board, symbol: str, depth: int) -> int:
     me = symbol
     opponent = Board.RED if me == Board.YELLOW else Board.YELLOW
     score = 0

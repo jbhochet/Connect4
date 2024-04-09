@@ -54,7 +54,7 @@ class EasyPlayer(Player):
         return "Easy Player"
 
     def play(self, symbol: str, board: Board) -> int:
-        return alphabeta(board, symbol, 1, eval_tools.eval_easy)
+        return alphabeta(board, symbol, 1, eval_tools.eval_1)
 
 
 class MediumPlayer(Player):
@@ -62,7 +62,7 @@ class MediumPlayer(Player):
         return "Medium Player"
 
     def play(self, symbol: str, board: Board) -> int:
-        return alphabeta(board, symbol, 5, eval_tools.eval_medium)
+        return alphabeta(board, symbol, 5, eval_tools.eval_2)
 
 
 class HardPlayer(Player):
@@ -70,7 +70,7 @@ class HardPlayer(Player):
         return "Hard Player"
 
     def play(self, symbol: str, board: Board) -> int:
-        return alphabeta(board, symbol, 5, eval_tools.eval_hard)
+        return alphabeta(board, symbol, 5, eval_tools.eval_3)
 
 
 # Unused --------------------
