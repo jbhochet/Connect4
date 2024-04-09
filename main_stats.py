@@ -1,7 +1,8 @@
 import argparse
 from typing import Tuple
 import matplotlib.pyplot as plt
-from player import EasyPlayer, MediumPlayer, HardPlayer
+from player import EvalPlayer, EasyPlayer, MediumPlayer, HardPlayer
+import eval_tools
 from game import Game
 from board import Board
 
@@ -36,6 +37,20 @@ def stats_games(player_r, player_y, nb_games: int) -> Tuple[int, int]:
     
     return r_win, y_win
 
+def get_player(name: str):
+    if ':' in name: # we want to test an eval
+        temp = name.split(":")
+        name, depth = temp[0], int(temp[1])
+        eval_func = getattr(eval_tools, name)
+        player = EvalPlayer(eval_func, depth)
+        return player
+    else: # we want to test a preset
+        player_map = { 
+            "easy": EasyPlayer,
+            "medium": MediumPlayer,
+            "hard": HardPlayer
+        }
+        return player_map[name]()
 
 # Define parser ----------------------------------------------------------------
 
@@ -47,7 +62,7 @@ parser = argparse.ArgumentParser(
 # Select on with levels compute stats
 parser.add_argument(
     "--ai-level",
-    choices=("easy", "medium", "hard"),
+    #choices=("easy", "medium", "hard"),
     nargs=2,
     help="The AI to compute stats.",
 )
@@ -93,7 +108,7 @@ if ai_level is None:
     plt.savefig("stats.png")
 else:
     # Stats just on specified
-    players = tuple(map(lambda e: player_map.get(e), ai_level))
+    players = tuple(map(lambda e: get_player(e), ai_level))
     player_r = players[0]
     player_y = players[1]
     r_win_count, y_win_count = stats_games(player_r, player_y, nb_games)

@@ -40,7 +40,14 @@ class RandomPlayer(Player):
                 pos.append(column)
 
         return choice(pos)
+    
+class EvalPlayer(Player):
+    def __init__(self, eval_func, depth: int) -> None:
+        self.eval_func = eval_func
+        self.depth = depth
 
+    def play(self, symbol: str, board: Board) -> int:
+        return alphabeta(board, symbol, self.depth, self.eval_func)
 
 class EasyPlayer(Player):
     def __str__(self) -> str:
@@ -55,7 +62,7 @@ class MediumPlayer(Player):
         return "Medium Player"
 
     def play(self, symbol: str, board: Board) -> int:
-        return alphabeta(board, symbol, 3, eval_tools.eval_medium)
+        return alphabeta(board, symbol, 5, eval_tools.eval_medium)
 
 
 class HardPlayer(Player):
@@ -63,8 +70,10 @@ class HardPlayer(Player):
         return "Hard Player"
 
     def play(self, symbol: str, board: Board) -> int:
-        return alphabeta(board, symbol, 6, eval_tools.eval_hard)
+        return alphabeta(board, symbol, 5, eval_tools.eval_hard)
 
+
+# Unused --------------------
 
 class MMAIPlayer(Player):
     def __init__(self, depth=1) -> None:
