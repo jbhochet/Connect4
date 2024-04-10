@@ -42,35 +42,30 @@ class RandomPlayer(Player):
         return choice(pos)
     
 class EvalPlayer(Player):
-    def __init__(self, eval_func, depth: int) -> None:
-        self.eval_func = eval_func
-        self.depth = depth
-
-    def play(self, symbol: str, board: Board) -> int:
-        return alphabeta(board, symbol, self.depth, self.eval_func)
-
-class EasyPlayer(Player):
+    def __init__(self, name: str, eval_func, depth: int) -> None:
+        self.__name = name
+        self.__eval_func = eval_func
+        self.__depth = depth
+    
     def __str__(self) -> str:
-        return "Easy Player"
+        return f"{self.__name} (depth: {self.__depth})"
 
     def play(self, symbol: str, board: Board) -> int:
-        return alphabeta(board, symbol, 1, eval_tools.eval_1)
+        return alphabeta(board, symbol, self.__depth, self.__eval_func)
+
+class EasyPlayer(EvalPlayer):
+    def __init__(self) -> None:
+        super().__init__("Easy", eval_tools.eval_1, 2)
 
 
-class MediumPlayer(Player):
-    def __str__(self) -> str:
-        return "Medium Player"
-
-    def play(self, symbol: str, board: Board) -> int:
-        return alphabeta(board, symbol, 5, eval_tools.eval_2)
+class MediumPlayer(EvalPlayer):
+    def __init__(self) -> None:
+        super().__init__("Medium", eval_tools.eval_2, 4)
 
 
-class HardPlayer(Player):
-    def __str__(self) -> str:
-        return "Hard Player"
-
-    def play(self, symbol: str, board: Board) -> int:
-        return alphabeta(board, symbol, 5, eval_tools.eval_3)
+class HardPlayer(EvalPlayer):
+    def __init__(self) -> None:
+        super().__init__("Hard", eval_tools.eval_3, 6)
 
 
 # Unused --------------------

@@ -9,7 +9,7 @@ from board import Board
 
 # Utilities ----------------------------------------------------------------------
 
-def plot_stats(ax, title: str, r_nb_win: int, y_nb_win: int, nb_games: int):
+def plot_stats(ax, title: str, fontsize: int, r_nb_win: int, y_nb_win: int, nb_games: int):
     draw_count = nb_games - (r_nb_win + y_nb_win)
     y = [r_nb_win, y_nb_win]
     colors = [ "red", "yellow" ]
@@ -17,7 +17,7 @@ def plot_stats(ax, title: str, r_nb_win: int, y_nb_win: int, nb_games: int):
         y.append(draw_count)
         colors.append("grey")
     ax.pie(y, colors=colors)
-    ax.set_title(title)
+    ax.set_title(title, fontsize = fontsize)
 
 def stats_games(player_r, player_y, nb_games: int) -> Tuple[int, int]:
     r_win = 0
@@ -42,7 +42,7 @@ def get_player(name: str):
         temp = name.split(":")
         name, depth = temp[0], int(temp[1])
         eval_func = getattr(eval_tools, name)
-        player = EvalPlayer(eval_func, depth)
+        player = EvalPlayer(name, eval_func, depth)
         return player
     else: # we want to test a preset
         player_map = { 
@@ -100,7 +100,7 @@ if ai_level is None:
                 continue
             print(f"Stats with {player_r} (red) and {player_y} (yellow)...")
             r_win_count, y_win_count = stats_games(player_r, player_y, nb_games)
-            plot_stats(axs[x,y], f"{level_r} (red) vs {level_y} (yellow)", r_win_count, y_win_count, nb_games)
+            plot_stats(axs[x,y], f"{player_r} (red) vs {player_y} (yellow)", 7, r_win_count, y_win_count, nb_games)
             y += 1
         x += 1
         y = 0
@@ -113,6 +113,6 @@ else:
     player_y = players[1]
     r_win_count, y_win_count = stats_games(player_r, player_y, nb_games)
     fig, ax = plt.subplots()
-    plot_stats(ax, f"{ai_level[0]} (red) vs {ai_level[1]} (yellow)", r_win_count, y_win_count, nb_games)
+    plot_stats(ax, f"{player_r} (red) vs {player_y} (yellow)", 12, r_win_count, y_win_count, nb_games)
     fig.suptitle("AI Stats for Connect 4")
     plt.savefig("stats.png")
