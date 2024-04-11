@@ -1,5 +1,4 @@
 from copy import deepcopy
-from typing import Optional
 
 
 class Board:
@@ -30,7 +29,7 @@ class Board:
         for row in self.board:
             result += "| " + " | ".join(row) + " |\n"
         result += "|---" * self.NB_COLUMNS + "|\n"
-        result += "| " + " | ".join(str(i) for i in range(self.NB_COLUMNS)) + " |\n"
+        result += "| " + " | ".join(str(i) for i in range(self.NB_COLUMNS))
         return result
 
     def copy(self):
@@ -54,7 +53,7 @@ class Board:
                 self.__winner = symbol
                 return
 
-        # Check  vertically
+        # Check vertically
         for i in range(4):
             bmin = last_row - i
             bmax = bmin + 3
@@ -64,7 +63,7 @@ class Board:
                 self.__winner = symbol
                 return
 
-        # Check diagonale
+        # Check diagonal
         for i in range(4):
             brmin = last_row - i
             brmax = brmin + 3
@@ -80,7 +79,7 @@ class Board:
                 self.__winner = symbol
                 return
 
-        # Check diagonale (neg)
+        # Check diagonal (neg)
         for i in range(4):
             brmin = last_row - i
             brmax = brmin + 3

@@ -12,19 +12,20 @@ from board import Board
 def plot_stats(ax, title: str, fontsize: int, r_nb_win: int, y_nb_win: int, nb_games: int):
     draw_count = nb_games - (r_nb_win + y_nb_win)
     y = [r_nb_win, y_nb_win]
-    colors = [ "red", "yellow" ]
+    colors = ["red", "yellow"]
     if draw_count > 0:
         y.append(draw_count)
         colors.append("grey")
     ax.pie(y, colors=colors)
-    ax.set_title(title, fontsize = fontsize)
+    ax.set_title(title, fontsize=fontsize)
+
 
 def stats_games(player_r, player_y, nb_games: int) -> Tuple[int, int]:
     r_win = 0
     y_win = 0
 
     for i in range(nb_games):
-        print(f"Stats on game {i+1}/{nb_games}...")
+        print(f"Stats on game {i + 1}/{nb_games}...")
         game = Game(player_r, player_y)
         # game loop
         while not game.has_ended():
@@ -34,23 +35,25 @@ def stats_games(player_r, player_y, nb_games: int) -> Tuple[int, int]:
             r_win += 1
         elif game.is_winner(Board.YELLOW):
             y_win += 1
-    
+
     return r_win, y_win
 
+
 def get_player(name: str):
-    if ':' in name: # we want to test an eval
+    if ':' in name:  # we want to test an eval
         temp = name.split(":")
         name, depth = temp[0], int(temp[1])
         eval_func = getattr(eval_tools, name)
         player = EvalPlayer(name, eval_func, depth)
         return player
-    else: # we want to test a preset
-        player_map = { 
+    else:  # we want to test a preset
+        player_map = {
             "easy": EasyPlayer,
             "medium": MediumPlayer,
             "hard": HardPlayer
         }
         return player_map[name]()
+
 
 # Define parser ----------------------------------------------------------------
 
@@ -62,16 +65,15 @@ parser = argparse.ArgumentParser(
 # Select on with levels compute stats
 parser.add_argument(
     "--ai-level",
-    #choices=("easy", "medium", "hard"),
+    # choices=("easy", "medium", "hard"),
     nargs=2,
     help="The AI to compute stats.",
 )
 
-# The number of game to play
+# The amount of game to play
 parser.add_argument(
     "--nb-games", type=int, default=10, help="The number of game to play for each round."
 )
-
 
 # Process Argument -------------------------------------------------------------
 
@@ -79,7 +81,6 @@ args = parser.parse_args()
 
 nb_games = args.nb_games
 ai_level = args.ai_level
-
 
 # Compute Stats ----------------------------------------------------------------
 
@@ -92,15 +93,15 @@ player_map = {
 
 if ai_level is None:
     # Stats all ai
-    fig, axs = plt.subplots(3,2)
-    x,y = 0, 0
+    fig, axs = plt.subplots(3, 2)
+    x, y = 0, 0
     for level_r, player_r in player_map.items():
         for level_y, player_y in player_map.items():
             if level_r == level_y:
                 continue
             print(f"Stats with {player_r} (red) and {player_y} (yellow)...")
             r_win_count, y_win_count = stats_games(player_r, player_y, nb_games)
-            plot_stats(axs[x,y], f"{player_r} (red) vs {player_y} (yellow)", 7, r_win_count, y_win_count, nb_games)
+            plot_stats(axs[x, y], f"{player_r} (red) vs {player_y} (yellow)", 7, r_win_count, y_win_count, nb_games)
             y += 1
         x += 1
         y = 0

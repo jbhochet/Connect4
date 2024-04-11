@@ -18,6 +18,7 @@ def minimax(board: Board, symbol: str, depth: int) -> int:
     max_val = max(actions.values())
     return choice([action[0] for action in actions.items() if action[1] == max_val])
 
+
 def min_value(board: Board, symbol: str, depth: int) -> float:
     """
     Reduce the value of this symbol and return the action with the lower value.

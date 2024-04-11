@@ -1,7 +1,6 @@
 from player import Player
 from board import Board
 from colorama import just_fix_windows_console, Fore
-import traceback
 
 
 class Game:
@@ -9,7 +8,6 @@ class Game:
         self.board = Board()
         self.player_r = player_r
         self.player_y = player_y
-        # TODO: define the first player to play
         self.next_player = player_r
 
     def __get_symbol_from_player(self, player: Player) -> str:
@@ -41,11 +39,10 @@ class Game:
 
         try:
             self.board.put_symbol(symbol, column)
-        except Exception as e:
-            # TODO: Remove | Just for debug
-            traceback.print_exc()
+        except Exception:
+            print("Your answer is not valid !")
             return
-        
+
         if player == self.player_y:
             self.next_player = self.player_r
         else:

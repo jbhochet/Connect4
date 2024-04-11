@@ -1,5 +1,4 @@
 from board import Board
-from functools import lru_cache
 
 # ---------------
 # Utility

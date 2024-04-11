@@ -21,7 +21,7 @@ class HumanPlayer(Player):
         while column < 0:
             try:
                 column = int(
-                    input(f"Player {symbol}, which column do you want to play in? ")
+                    input(f"Player {symbol}, which column do you want to play in ? ")
                 )
             except ValueError:
                 column = -1
@@ -40,18 +40,20 @@ class RandomPlayer(Player):
                 pos.append(column)
 
         return choice(pos)
-    
+
+
 class EvalPlayer(Player):
     def __init__(self, name: str, eval_func, depth: int) -> None:
         self.__name = name
         self.__eval_func = eval_func
         self.__depth = depth
-    
+
     def __str__(self) -> str:
         return f"{self.__name} (depth: {self.__depth})"
 
     def play(self, symbol: str, board: Board) -> int:
         return alphabeta(board, symbol, self.__depth, self.__eval_func)
+
 
 class EasyPlayer(EvalPlayer):
     def __init__(self) -> None:
