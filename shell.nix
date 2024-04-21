@@ -26,6 +26,7 @@ pkgs.mkShell {
       snakeviz
       colorama
       matplotlib
+      numpy
     ]))
   ];
 }

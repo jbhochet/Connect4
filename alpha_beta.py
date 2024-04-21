@@ -48,10 +48,10 @@ def max_value(
 def min_value(
     board: Board, symbol: str, depth: int, alpha: float, beta: float, eval_func
 ) -> tuple[int, None] | tuple[float | Any, int | None]:
-    if terminal_test(board, depth):
-        return eval_func(board, symbol, depth), None
-
     opponent = Board.RED if symbol is Board.YELLOW else Board.YELLOW
+    if terminal_test(board, depth):
+        return -eval_func(board, opponent, depth), None
+    
     best_column = None
     v = inf
     for column in board_actions(board):

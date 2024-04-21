@@ -130,6 +130,10 @@ class Board:
         Returns the value of the cell at the given row and column.
         """
         return self.board[row][column]
+    
+    def get_top_position(self, column: int) -> int:
+        """Returns the top position (where put the next move) of the column."""
+        return self.column_top_positions[column]
 
     def is_valid_position(self, row: int, column: int) -> bool:
         """

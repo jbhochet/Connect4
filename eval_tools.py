@@ -90,7 +90,9 @@ def eval_3(board: Board, symbol: str, depth: int) -> int:
     return score
 
 
-def evaluate_position(board: Board, row: int, col: int, player: str, opponent: str) -> int:
+def evaluate_position(
+    board: Board, row: int, col: int, player: str, opponent: str
+) -> int:
     """
     Evaluate the position on the board for the given player.
     """
@@ -115,7 +117,9 @@ def evaluate_position(board: Board, row: int, col: int, player: str, opponent: s
     return score
 
 
-def evaluate_direction(board: Board, row: int, col: int, player: str, opponent: str, d_row: int, d_col: int) -> int:
+def evaluate_direction(
+    board: Board, row: int, col: int, player: str, opponent: str, d_row: int, d_col: int
+) -> int:
     """
     Evaluate a specific direction (horizontal, vertical, diagonal) for the given player.
     """
@@ -154,3 +158,82 @@ def evaluate_direction(board: Board, row: int, col: int, player: str, opponent: 
         score -= 10  # Opponent has two in a row with two empty spaces
 
     return score
+
+
+# ---------------
+# Eval 4
+# ---------------
+
+
+def eval_4(board: Board, symbol: str, depth: int) -> int:
+    score = 0
+    nb_config = 0
+    # define symbol
+    me = symbol
+    opponent = Board.RED if me == Board.YELLOW else Board.YELLOW
+    # For each board cells
+    for row in range(board.NB_ROWS):
+        for col in range(board.NB_COLUMNS):
+            # Start count
+            directions = (
+                (0, 1),  # horizontal (left to right)
+                (1, 1),  # diagonal (top left to bottom right)
+                (1, 0),  # vertical (top to bottom)
+                (1, -1),  # diagonal (top right to bottom left)
+            )
+            for d_row, d_col in directions:
+                my_symbol_count = 0
+                oponent_symbol_count = 0
+                empty_symbol_count = 0
+                config_distance = 0
+                is_ok = True
+                # count the symbols
+                for i in range(4):
+                    r = row + i * d_row
+                    c = col + i * d_col
+                    if not board.is_valid_position(r, c):
+                        is_ok = False  # this is a bad config!
+                        break
+                    # check the symbol in this cell
+                    cell_value = board.get_cell_value(r, c)
+                    if cell_value == me:
+                        my_symbol_count += 1
+                    elif cell_value == opponent:
+                        oponent_symbol_count += 1
+                    else:
+                        # the cell is empty! get the distance!
+                        empty_symbol_count += 1
+                        config_distance += board.get_top_position(c) - r
+                # skip if the config is bad
+                if not is_ok:
+                    continue
+                # some checks
+                assert config_distance >= 0
+                assert (my_symbol_count + oponent_symbol_count + empty_symbol_count) == 4
+                # compute my score
+                f_score = lambda x, n: (x/((n) or 1))
+                tmp_score = 0
+                tmp_nb_config = 0
+                # this is a win move!
+                if my_symbol_count == 3 and empty_symbol_count == 1:
+                    tmp_score += f_score(1000, config_distance)
+                    tmp_nb_config += 1
+                elif my_symbol_count == 2 and empty_symbol_count == 2:
+                    tmp_score += f_score(0, config_distance)
+                    tmp_nb_config += 1
+
+                if oponent_symbol_count == 3 and empty_symbol_count == 1:
+                    tmp_score -= f_score(1000, config_distance)
+                    tmp_nb_config += 1
+                elif oponent_symbol_count == 2 and empty_symbol_count == 2:
+                    tmp_score -= f_score(0, config_distance)
+                    tmp_nb_config += 1
+                # add the score
+                if tmp_nb_config != 0:
+                    score += tmp_score
+                    nb_config+=tmp_nb_config
+    # the score is ready to use :)
+    if nb_config > 0:
+        return (score/nb_config)
+    else:
+        return 0
