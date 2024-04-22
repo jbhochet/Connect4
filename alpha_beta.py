@@ -14,8 +14,6 @@ def board_actions(board: Board):
     for i in range(middle):
         i += 1
         column = [middle - i, middle + i]
-        if random.randint(0, 1) == 1:
-            column.reverse()
         for column in column:
             if not board.is_column_full(column):
                 yield column
@@ -35,6 +33,8 @@ def max_value(
         board.undo()
         if v < utility:
             v = utility
+            best_column = column
+        elif v == utility and random.randint(0,1) == 1:
             best_column = column
 
         if v >= beta:
@@ -60,6 +60,8 @@ def min_value(
         board.undo()
         if v > utility:
             v = utility
+            best_column = column
+        elif v == utility and random.randint(0,1) == 1:
             best_column = column
 
         if v <= alpha:
