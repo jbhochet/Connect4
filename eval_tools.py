@@ -1,5 +1,6 @@
 from board import Board
 
+
 # ---------------
 # Utility
 # ---------------
@@ -90,9 +91,7 @@ def eval_3(board: Board, symbol: str, depth: int) -> int:
     return score
 
 
-def evaluate_position(
-    board: Board, row: int, col: int, player: str, opponent: str
-) -> int:
+def evaluate_position(board: Board, row: int, col: int, player: str, opponent: str) -> int:
     """
     Evaluate the position on the board for the given player.
     """
@@ -118,7 +117,7 @@ def evaluate_position(
 
 
 def evaluate_direction(
-    board: Board, row: int, col: int, player: str, opponent: str, d_row: int, d_col: int
+        board: Board, row: int, col: int, player: str, opponent: str, d_row: int, d_col: int
 ) -> int:
     """
     Evaluate a specific direction (horizontal, vertical, diagonal) for the given player.
@@ -165,7 +164,7 @@ def evaluate_direction(
 # ---------------
 
 
-def eval_4(board: Board, symbol: str, depth: int) -> int:
+def eval_4(board: Board, symbol: str, depth: int) -> float | int:
     score = 0
     nb_config = 0
     # define symbol
@@ -211,7 +210,7 @@ def eval_4(board: Board, symbol: str, depth: int) -> int:
                 assert config_distance >= 0
                 assert (my_symbol_count + oponent_symbol_count + empty_symbol_count) == 4
                 # compute my score
-                f_score = lambda x, n: (x/((n) or 1))
+                f_score = lambda x, n: (x / (n or 1))
                 tmp_score = 0
                 tmp_nb_config = 0
                 # this is a win move!
@@ -231,9 +230,9 @@ def eval_4(board: Board, symbol: str, depth: int) -> int:
                 # add the score
                 if tmp_nb_config != 0:
                     score += tmp_score
-                    nb_config+=tmp_nb_config
+                    nb_config += tmp_nb_config
     # the score is ready to use :)
     if nb_config > 0:
-        return (score/nb_config)
+        return score / nb_config
     else:
         return 0
