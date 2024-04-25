@@ -1,6 +1,7 @@
 import random
-from typing import Any, Tuple
+from typing import Tuple
 from math import inf
+from random import randint
 from board import Board
 from eval_tools import terminal_test
 
@@ -27,8 +28,6 @@ def get_opponent(symbol: str) -> str:
     """Returns the opponent of this symbol."""
     return Board.RED if symbol is Board.YELLOW else Board.YELLOW
 
-# board: Board, symbol: str, depth: int
-
 def alphabeta(board: Board, symbol: str, depth: int, eval_fx) -> int:
     """Returns the best column to play the next move."""
     u, best_action = max_value(board, symbol, depth, -inf, +inf, eval_fx)
@@ -50,7 +49,7 @@ def max_value(board: Board, symbol: str, depth: int, alpha: int, beta: int, eval
         # undo the action
         board.undo()
         # update best move if the utility is better
-        if v_bis > v:
+        if v_bis > v or (v_bis == v and randint(0,1) == 1):
             v = v_bis
             best_action = action
         # alpha beta cut off
@@ -75,7 +74,7 @@ def min_value(board: Board, symbol: str, depth: int, alpha: int, beta: int, eval
         # undo the action
         board.undo()
         # update best move if the utility is better
-        if v_bis < v:
+        if v_bis < v or (v_bis == v and randint(0,1) == 1):
             v = v_bis
             best_action = action
         # alpha beta cut off
