@@ -31,7 +31,6 @@ def get_opponent(symbol: str) -> str:
 def alphabeta(board: Board, symbol: str, depth: int, eval_fx) -> int:
     """Returns the best column to play the next move."""
     u, best_action = max_value(board, symbol, depth, -inf, +inf, eval_fx)
-    print("{} : v = {} | action = {}".format(symbol, u, best_action))
     return best_action
 
 def max_value(board: Board, symbol: str, depth: int, alpha: int, beta: int, eval_fx) -> Tuple[float, int]:

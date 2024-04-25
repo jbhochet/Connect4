@@ -43,8 +43,9 @@ def get_player(name: str):
     if ':' in name:  # we want to test an eval
         temp = name.split(":")
         name, depth = temp[0], int(temp[1])
+        use_minimax = len(temp) > 2 and temp[2] == 'm'
         eval_func = getattr(eval_tools, name)
-        player = EvalPlayer(name, eval_func, depth)
+        player = EvalPlayer(name, eval_func, depth, use_minimax=use_minimax)
         return player
     else:  # we want to test a preset
         player_map = {

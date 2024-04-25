@@ -1,4 +1,5 @@
 from copy import deepcopy
+from typing import Optional
 
 
 class Board:
@@ -109,6 +110,13 @@ class Board:
         self.column_top_positions[column] -= 1
         # Compute the actual winner
         self.__compute_winner()
+    
+    def get_last_move(self) -> Optional[int]:
+        """Returns the last played move."""
+        if len(self.history) > 0:
+            return self.history[-1]
+        else:
+            return None
 
     def undo(self):
         """

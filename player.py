@@ -43,16 +43,22 @@ class RandomPlayer(Player):
 
 
 class EvalPlayer(Player):
-    def __init__(self, name: str, eval_func, depth: int) -> None:
+    def __init__(self, name: str, eval_func, depth: int, use_minimax = False) -> None:
         self.__name = name
         self.__eval_func = eval_func
         self.__depth = depth
+        self.__use_minimax = use_minimax
 
     def __str__(self) -> str:
-        return f"{self.__name} (depth: {self.__depth})"
+        algo = "AB" if not self.__use_minimax else "MM"
+        return f"{self.__name} (depth: {self.__depth} | {algo})"
 
     def play(self, symbol: str, board: Board) -> int:
-        return alphabeta(board, symbol, self.__depth, self.__eval_func)
+        if self.__use_minimax:
+            algo = minimax
+        else:
+            algo = alphabeta
+        return algo(board, symbol, self.__depth, self.__eval_func)
 
 
 class EasyPlayer(EvalPlayer):
