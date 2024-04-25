@@ -57,7 +57,7 @@ class EvalPlayer(Player):
 
 class EasyPlayer(EvalPlayer):
     def __init__(self) -> None:
-        super().__init__("Easy", eval_tools.eval_1, 2)
+        super().__init__("Easy", eval_tools.eval_1, 4)
 
 
 class MediumPlayer(EvalPlayer):
