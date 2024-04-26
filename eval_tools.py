@@ -244,7 +244,7 @@ def eval_4(board: Board, symbol: str, depth: int) -> float | int:
     # define symbol
     me = symbol
     opponent = Board.RED if me == Board.YELLOW else Board.YELLOW
-    # For each board cells
+    # For each board cell
     for row in range(board.NB_ROWS):
         for col in range(board.NB_COLUMNS):
             # Start count
@@ -256,7 +256,7 @@ def eval_4(board: Board, symbol: str, depth: int) -> float | int:
             )
             for d_row, d_col in directions:
                 my_symbol_count = 0
-                oponent_symbol_count = 0
+                opponent_symbol_count = 0
                 empty_symbol_count = 0
                 config_distance = 0
                 is_ok = True
@@ -272,7 +272,7 @@ def eval_4(board: Board, symbol: str, depth: int) -> float | int:
                     if cell_value == me:
                         my_symbol_count += 1
                     elif cell_value == opponent:
-                        oponent_symbol_count += 1
+                        opponent_symbol_count += 1
                     else:
                         # the cell is empty! get the distance!
                         empty_symbol_count += 1
@@ -283,7 +283,7 @@ def eval_4(board: Board, symbol: str, depth: int) -> float | int:
                 # some checks
                 assert config_distance >= 0
                 assert (
-                    my_symbol_count + oponent_symbol_count + empty_symbol_count
+                               my_symbol_count + opponent_symbol_count + empty_symbol_count
                 ) == 4
                 # compute my score
                 f_score = lambda x, n: (x / (n or 1))
@@ -297,10 +297,10 @@ def eval_4(board: Board, symbol: str, depth: int) -> float | int:
                     tmp_score += f_score(100, config_distance)
                     tmp_nb_config += 1
 
-                if oponent_symbol_count == 3 and empty_symbol_count == 1:
+                if opponent_symbol_count == 3 and empty_symbol_count == 1:
                     tmp_score -= f_score(1000, config_distance)
                     tmp_nb_config += 1
-                elif oponent_symbol_count == 2 and empty_symbol_count == 2:
+                elif opponent_symbol_count == 2 and empty_symbol_count == 2:
                     tmp_score -= f_score(100, config_distance)
                     tmp_nb_config += 1
                 # add the score

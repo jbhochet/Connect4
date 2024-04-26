@@ -39,7 +39,7 @@ def stats_games(player_r, player_y, nb_games: int) -> Tuple[int, int]:
             r_win += 1
         elif game.is_winner(Board.YELLOW):
             y_win += 1
-    print(f"Done! ({time.time()-before}s)")
+    print(f"Done! ({time.time() - before}s)")
 
     return r_win, y_win
 

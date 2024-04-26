@@ -1,8 +1,7 @@
-from board import Board
 from random import choice
 from minimax import minimax
 from alpha_beta import alphabeta
-import eval_tools
+from eval_tools import *
 
 
 class Player:
@@ -43,7 +42,7 @@ class RandomPlayer(Player):
 
 
 class EvalPlayer(Player):
-    def __init__(self, name: str, eval_func, actions_fx, depth: int, use_minimax = False) -> None:
+    def __init__(self, name: str, eval_func, actions_fx, depth: int, use_minimax=False) -> None:
         self.__name = name
         self.__eval_func = eval_func
         self.__actions_fx = actions_fx
@@ -64,17 +63,17 @@ class EvalPlayer(Player):
 
 class EasyPlayer(EvalPlayer):
     def __init__(self) -> None:
-        super().__init__("Easy", eval_tools.eval_1, eval_tools.board_actions_4, 4)
+        super().__init__("Easy", eval_1, board_actions_4, 5)
 
 
 class MediumPlayer(EvalPlayer):
     def __init__(self) -> None:
-        super().__init__("Medium", eval_tools.eval_2, eval_tools.board_actions_4, 4)
+        super().__init__("Medium", eval_2, board_actions_4, 5)
 
 
 class HardPlayer(EvalPlayer):
     def __init__(self) -> None:
-        super().__init__("Hard", eval_tools.eval_3, eval_tools.board_actions_4, 6)
+        super().__init__("Hard", eval_3, board_actions_4, 5)
 
 
 # Unused --------------------

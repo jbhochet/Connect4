@@ -24,7 +24,7 @@ def max_value(board: Board, symbol: str, depth: int, eval_fx, actions_fx) -> Tup
         v_bis, _ = min_value(board, symbol, depth - 1, eval_fx, actions_fx)
         # undo the action
         board.undo()
-        # update best move if the utility is better
+        # update the best move if the utility is better
         if v_bis > v:
             v = v_bis
             best_action = action
@@ -35,7 +35,7 @@ def max_value(board: Board, symbol: str, depth: int, eval_fx, actions_fx) -> Tup
 def min_value(board: Board, symbol: str, depth: int, eval_fx, actions_fx) -> Tuple[float, int]:
     # "symbol" here is still the maximizing player.
     # If this config is terminal, we need to evaluate it for this player,
-    # *but* knowing that if there is a next move then it is the opponent's move.
+    # *but* knowing that if there is a next move, then it is the opponent's move.
     # We can approximate this without adding a second parameter to eval
     # by evaluating the config from the opponent's point of view
     # and then taking the negative value of that (assuming eval symmetric).
@@ -55,7 +55,7 @@ def min_value(board: Board, symbol: str, depth: int, eval_fx, actions_fx) -> Tup
         v_bis, _ = max_value(board, symbol, depth - 1, eval_fx, actions_fx)
         # undo the action
         board.undo()
-        # update best move if the utility is better
+        # update the best move if the utility is better
         if v_bis < v:
             v = v_bis
             best_action = action
