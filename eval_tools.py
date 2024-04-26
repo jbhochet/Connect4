@@ -18,10 +18,27 @@ def terminal_test(board: Board, depth: int) -> bool:
     return False
 
 
+def get_opponent(symbol: str) -> str:
+    """Returns the opponent of this symbol."""
+    return Board.RED if symbol is Board.YELLOW else Board.YELLOW
+
+
 def board_actions(board: Board):
-    for column in range(board.NB_COLUMNS):
-        if not board.is_column_full(column):
-            yield column
+    """Return a generator of column from center to out."""
+    actions = []
+    middle = board.NB_COLUMNS // 2
+
+    if board.NB_COLUMNS % 2 != 0 and not board.is_column_full(middle):
+        actions.append(middle)
+
+    for i in range(middle):
+        i += 1
+        column = [middle - i, middle + i]
+        for column in column:
+            if not board.is_column_full(column):
+                actions.append(column)
+
+    return actions
 
 
 def count_win_move(board: Board, symbol: str) -> int:
@@ -91,7 +108,9 @@ def eval_3(board: Board, symbol: str, depth: int) -> int:
     return score
 
 
-def evaluate_position(board: Board, row: int, col: int, player: str, opponent: str) -> int:
+def evaluate_position(
+    board: Board, row: int, col: int, player: str, opponent: str
+) -> int:
     """
     Evaluate the position on the board for the given player.
     """
@@ -117,7 +136,7 @@ def evaluate_position(board: Board, row: int, col: int, player: str, opponent: s
 
 
 def evaluate_direction(
-        board: Board, row: int, col: int, player: str, opponent: str, d_row: int, d_col: int
+    board: Board, row: int, col: int, player: str, opponent: str, d_row: int, d_col: int
 ) -> int:
     """
     Evaluate a specific direction (horizontal, vertical, diagonal) for the given player.
@@ -208,7 +227,9 @@ def eval_4(board: Board, symbol: str, depth: int) -> float | int:
                     continue
                 # some checks
                 assert config_distance >= 0
-                assert (my_symbol_count + oponent_symbol_count + empty_symbol_count) == 4
+                assert (
+                    my_symbol_count + oponent_symbol_count + empty_symbol_count
+                ) == 4
                 # compute my score
                 f_score = lambda x, n: (x / (n or 1))
                 tmp_score = 0

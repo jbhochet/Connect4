@@ -1,50 +1,63 @@
-from board import Board
-from typing import Any
+from typing import Tuple
 from math import inf
-from random import choice
-from eval_tools import terminal_test, board_actions
+from board import Board
+from eval_tools import terminal_test, board_actions, get_opponent
 
 
 def minimax(board: Board, symbol: str, depth: int, eval_fx) -> int:
-    """
-    Run the minimax algorithm on this board using the specified symbol and
-    return the column number that provides the best move for that symbol.
-    """
-    actions = dict()
-    for column in board_actions(board):
-        board.put_symbol(symbol, column)
-        actions[column] = min_value(board, symbol, depth, eval_fx)
-        board.undo()
-    max_val = max(actions.values())
-    return choice([action[0] for action in actions.items() if action[1] == max_val])
+    """Returns the best column to play the next move."""
+    u, best_action = max_value(board, symbol, depth, eval_fx)
+    return best_action
 
 
-def min_value(board: Board, symbol: str, depth: int, eval_fx) -> float:
-    """
-    Reduce the value of this symbol and return the action with the lower value.
-    The returned value is in this format: (column_number, play_value).
-    """
+def max_value(board: Board, symbol: str, depth: int, eval_fx) -> Tuple[float, int]:
+    # check the terminal test
     if terminal_test(board, depth):
-        return eval_fx(board, symbol, depth)
-    opponent = Board.RED if symbol is Board.YELLOW else Board.YELLOW
-    v = inf
-    for column in board_actions(board):
-        board.put_symbol(opponent, column)
-        v = min(v, max_value(board, symbol, depth - 1, eval_fx))
-        board.undo()
-    return v
-
-
-def max_value(board: Board, symbol: str, depth: int, eval_fx) -> float:
-    """
-    Maximise the symbol's gain by returning the action with the highest gain.
-    The return value should be in the format of (column number, play value).
-    """
-    if terminal_test(board, depth):
-        return eval_fx(board, symbol, depth)
+        return eval_fx(board, symbol, depth), 0
+    # init
     v = -inf
-    for column in board_actions(board):
-        board.put_symbol(symbol, column)
-        v = max(v, min_value(board, symbol, depth - 1, eval_fx))
+    best_action = None
+    for action in board_actions(board):
+        # play the action
+        board.put_symbol(symbol, action)
+        # compute the utility score of this action
+        v_bis, _ = min_value(board, symbol, depth - 1, eval_fx)
+        # undo the action
         board.undo()
-    return v
+        # update best move if the utility is better
+        if v_bis > v:
+            v = v_bis
+            best_action = action
+    # return the best action
+    return v, best_action
+
+
+def min_value(board: Board, symbol: str, depth: int, eval_fx) -> Tuple[float, int]:
+    # "symbol" here is still the maximizing player.
+    # If this config is terminal, we need to evaluate it for this player,
+    # *but* knowing that if there is a next move then it is the opponent's move.
+    # We can approximate this without adding a second parameter to eval
+    # by evaluating the config from the opponent's point of view
+    # and then taking the negative value of that (assuming eval symmetric).
+
+    opponent = get_opponent(symbol)
+
+    # check the terminal test
+    if terminal_test(board, depth):
+        return -eval_fx(board, opponent, depth), 0
+    # init
+    v = +inf
+    best_action = None
+    for action in board_actions(board):
+        # play the action
+        board.put_symbol(opponent, action)
+        # compute the utility score of this action
+        v_bis, _ = max_value(board, symbol, depth - 1, eval_fx)
+        # undo the action
+        board.undo()
+        # update best move if the utility is better
+        if v_bis < v:
+            v = v_bis
+            best_action = action
+    # return the best action
+    return v, best_action
