@@ -5,11 +5,14 @@ from player import EvalPlayer, EasyPlayer, MediumPlayer, HardPlayer
 import eval_tools
 from game import Game
 from board import Board
+import time
+import re
 
 
 # Utilities ----------------------------------------------------------------------
 
-def plot_stats(ax, title: str, fontsize: int, r_nb_win: int, y_nb_win: int, nb_games: int):
+
+def plot_stats(ax, title: str, r_nb_win: int, y_nb_win: int, nb_games: int):
     draw_count = nb_games - (r_nb_win + y_nb_win)
     y = [r_nb_win, y_nb_win]
     colors = ["red", "yellow"]
@@ -17,13 +20,14 @@ def plot_stats(ax, title: str, fontsize: int, r_nb_win: int, y_nb_win: int, nb_g
         y.append(draw_count)
         colors.append("grey")
     ax.pie(y, colors=colors)
-    ax.set_title(title, fontsize=fontsize)
+    ax.set_title(title, fontsize=7)
 
 
 def stats_games(player_r, player_y, nb_games: int) -> Tuple[int, int]:
     r_win = 0
     y_win = 0
 
+    before = time.time()
     for i in range(nb_games):
         print(f"Stats on game {i + 1}/{nb_games}...")
         game = Game(player_r, player_y)
@@ -35,24 +39,24 @@ def stats_games(player_r, player_y, nb_games: int) -> Tuple[int, int]:
             r_win += 1
         elif game.is_winner(Board.YELLOW):
             y_win += 1
+    print(f"Done! ({time.time()-before}s)")
 
     return r_win, y_win
 
 
 def get_player(name: str):
-    if ':' in name:  # we want to test an eval
-        temp = name.split(":")
-        name, depth = temp[0], int(temp[1])
-        use_minimax = len(temp) > 2 and temp[2] == 'm'
-        eval_func = getattr(eval_tools, name)
-        player = EvalPlayer(name, eval_func, depth, use_minimax=use_minimax)
-        return player
-    else:  # we want to test a preset
-        player_map = {
-            "easy": EasyPlayer,
-            "medium": MediumPlayer,
-            "hard": HardPlayer
-        }
+    pattern = "^(?P<eval>\w+):(?P<action>\w+):(?P<depth>\d)(:(?P<m>m))?$"
+    matcher = re.search(pattern, name)
+    if matcher:
+        res = matcher.groupdict()
+        eval_fx = getattr(eval_tools, res["eval"])
+        action_fx = getattr(eval_tools, res["action"])
+        depth = int(res["depth"])
+        use_minimax = res["m"] == "m"
+        name = "{}:{}".format(res["eval"], res["action"])
+        return EvalPlayer(name, eval_fx, action_fx, depth, use_minimax)
+    else:
+        player_map = {"easy": EasyPlayer, "medium": MediumPlayer, "hard": HardPlayer}
         return player_map[name]()
 
 
@@ -73,7 +77,10 @@ parser.add_argument(
 
 # The amount of game to play
 parser.add_argument(
-    "--nb-games", type=int, default=10, help="The number of game to play for each round."
+    "--nb-games",
+    type=int,
+    default=10,
+    help="The number of game to play for each round.",
 )
 
 # Process Argument -------------------------------------------------------------
@@ -86,11 +93,7 @@ ai_level = args.ai_level
 # Compute Stats ----------------------------------------------------------------
 
 # define all instances of players
-player_map = {
-    "easy": EasyPlayer(),
-    "medium": MediumPlayer(),
-    "hard": HardPlayer()
-}
+player_map = {"easy": EasyPlayer(), "medium": MediumPlayer(), "hard": HardPlayer()}
 
 if ai_level is None:
     # Stats all ai
@@ -102,7 +105,13 @@ if ai_level is None:
                 continue
             print(f"Stats with {player_r} (red) and {player_y} (yellow)...")
             r_win_count, y_win_count = stats_games(player_r, player_y, nb_games)
-            plot_stats(axs[x, y], f"{player_r} (red) vs {player_y} (yellow)", 7, r_win_count, y_win_count, nb_games)
+            plot_stats(
+                axs[x, y],
+                f"{player_r} (red) vs {player_y} (yellow)",
+                r_win_count,
+                y_win_count,
+                nb_games,
+            )
             y += 1
         x += 1
         y = 0
@@ -115,6 +124,12 @@ else:
     player_y = players[1]
     r_win_count, y_win_count = stats_games(player_r, player_y, nb_games)
     fig, ax = plt.subplots()
-    plot_stats(ax, f"{player_r} (red) vs {player_y} (yellow)", 12, r_win_count, y_win_count, nb_games)
+    plot_stats(
+        ax,
+        f"{player_r} (red) vs {player_y} (yellow)",
+        r_win_count,
+        y_win_count,
+        nb_games,
+    )
     fig.suptitle("AI Stats for Connect 4")
     plt.savefig("stats.png")

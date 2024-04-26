@@ -1,9 +1,64 @@
 from board import Board
-
+from random import shuffle
 
 # ---------------
 # Utility
 # ---------------
+
+# Board Actions -----------------------
+
+
+def board_actions_1(board: Board):
+    """Returns a generator of column from the left to right."""
+    for action in range(board.NB_COLUMNS):
+        if not board.is_column_full(action):
+            yield action
+
+
+def board_actions_2(board: Board):
+    """Returns a generator of column from center to out."""
+    actions = []
+    middle = board.NB_COLUMNS // 2
+
+    if board.NB_COLUMNS % 2 != 0 and not board.is_column_full(middle):
+        actions.append(middle)
+
+    for i in range(middle):
+        i += 1
+        column = [middle - i, middle + i]
+        for column in column:
+            if not board.is_column_full(column):
+                actions.append(column)
+
+    return actions
+
+
+def board_actions_3(board: Board):
+    """Returns the columns in a random order."""
+    columns = [i for i in range(board.NB_COLUMNS) if not board.is_column_full(i)]
+    shuffle(columns)
+    return columns
+
+def board_actions_4(board: Board):
+    """Returns the column based on the last move."""
+    # get the last action of use the middle column
+    middle = board.get_last_move()
+    if middle is None:
+        middle = board.NB_COLUMNS // 2
+    # from the middle to out
+    if not board.is_column_full(middle):
+        yield middle
+    n = max(middle, board.NB_COLUMNS - middle)
+    for i in range(1, n):
+        for column in (middle-i, middle+i):
+            if 0 <= column < board.NB_COLUMNS:
+                if not board.is_column_full(column):
+                    yield column
+
+
+
+
+# End Board Actions -------------------
 
 
 def terminal_test(board: Board, depth: int) -> bool:
@@ -23,30 +78,12 @@ def get_opponent(symbol: str) -> str:
     return Board.RED if symbol is Board.YELLOW else Board.YELLOW
 
 
-def board_actions(board: Board):
-    """Return a generator of column from center to out."""
-    actions = []
-    middle = board.NB_COLUMNS // 2
-
-    if board.NB_COLUMNS % 2 != 0 and not board.is_column_full(middle):
-        actions.append(middle)
-
-    for i in range(middle):
-        i += 1
-        column = [middle - i, middle + i]
-        for column in column:
-            if not board.is_column_full(column):
-                actions.append(column)
-
-    return actions
-
-
 def count_win_move(board: Board, symbol: str) -> int:
     """
     Returns the number of winning moves on the board for the symbol.
     """
     res = 0
-    for column in board_actions(board):
+    for column in board_actions_1(board):
         board.put_symbol(symbol, column)
         if board.is_winner(symbol):
             res += 1

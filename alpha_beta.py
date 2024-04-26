@@ -1,17 +1,17 @@
 from typing import Tuple
 from math import inf
 from board import Board
-from eval_tools import terminal_test, board_actions, get_opponent
+from eval_tools import terminal_test, get_opponent
 
 
-def alphabeta(board: Board, symbol: str, depth: int, eval_fx) -> int:
+def alphabeta(board: Board, symbol: str, depth: int, eval_fx, actions_fx) -> int:
     """Returns the best column to play the next move."""
-    u, best_action = max_value(board, symbol, depth, -inf, +inf, eval_fx)
+    _, best_action = max_value(board, symbol, depth, -inf, +inf, eval_fx, actions_fx)
     return best_action
 
 
 def max_value(
-    board: Board, symbol: str, depth: int, alpha: int, beta: int, eval_fx
+    board: Board, symbol: str, depth: int, alpha: int, beta: int, eval_fx, actions_fx
 ) -> Tuple[float, int]:
     # check the terminal test
     if terminal_test(board, depth):
@@ -19,11 +19,11 @@ def max_value(
     # init
     v = -inf
     best_action = None
-    for action in board_actions(board):
+    for action in actions_fx(board):
         # play the action
         board.put_symbol(symbol, action)
         # compute the utility score of this action
-        v_bis, _ = min_value(board, symbol, depth - 1, alpha, beta, eval_fx)
+        v_bis, _ = min_value(board, symbol, depth - 1, alpha, beta, eval_fx, actions_fx)
         # undo the action
         board.undo()
         # update best move if the utility is better
@@ -39,7 +39,7 @@ def max_value(
 
 
 def min_value(
-    board: Board, symbol: str, depth: int, alpha: int, beta: int, eval_fx
+    board: Board, symbol: str, depth: int, alpha: int, beta: int, eval_fx, actions_fx
 ) -> Tuple[float, int]:
     # "symbol" here is still the maximizing player.
     # If this config is terminal, we need to evaluate it for this player,
@@ -56,11 +56,11 @@ def min_value(
     # init
     v = +inf
     best_action = None
-    for action in board_actions(board):
+    for action in actions_fx(board):
         # play the action
         board.put_symbol(opponent, action)
         # compute the utility score of this action
-        v_bis, _ = max_value(board, symbol, depth - 1, alpha, beta, eval_fx)
+        v_bis, _ = max_value(board, symbol, depth - 1, alpha, beta, eval_fx, actions_fx)
         # undo the action
         board.undo()
         # update best move if the utility is better

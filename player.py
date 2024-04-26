@@ -43,9 +43,10 @@ class RandomPlayer(Player):
 
 
 class EvalPlayer(Player):
-    def __init__(self, name: str, eval_func, depth: int, use_minimax = False) -> None:
+    def __init__(self, name: str, eval_func, actions_fx, depth: int, use_minimax = False) -> None:
         self.__name = name
         self.__eval_func = eval_func
+        self.__actions_fx = actions_fx
         self.__depth = depth
         self.__use_minimax = use_minimax
 
@@ -58,22 +59,22 @@ class EvalPlayer(Player):
             algo = minimax
         else:
             algo = alphabeta
-        return algo(board, symbol, self.__depth, self.__eval_func)
+        return algo(board, symbol, self.__depth, self.__eval_func, self.__actions_fx)
 
 
 class EasyPlayer(EvalPlayer):
     def __init__(self) -> None:
-        super().__init__("Easy", eval_tools.eval_1, 4)
+        super().__init__("Easy", eval_tools.eval_1, eval_tools.board_actions_4, 4)
 
 
 class MediumPlayer(EvalPlayer):
     def __init__(self) -> None:
-        super().__init__("Medium", eval_tools.eval_2, 4)
+        super().__init__("Medium", eval_tools.eval_2, eval_tools.board_actions_4, 4)
 
 
 class HardPlayer(EvalPlayer):
     def __init__(self) -> None:
-        super().__init__("Hard", eval_tools.eval_3, 6)
+        super().__init__("Hard", eval_tools.eval_3, eval_tools.board_actions_4, 6)
 
 
 # Unused --------------------
