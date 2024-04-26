@@ -1,5 +1,5 @@
 from board import Board
-from random import shuffle
+from random import shuffle, randint
 
 # ---------------
 # Utility
@@ -39,6 +39,7 @@ def board_actions_3(board: Board):
     shuffle(columns)
     return columns
 
+
 def board_actions_4(board: Board):
     """Returns the column based on the last move."""
     # get the last action of use the middle column
@@ -48,14 +49,31 @@ def board_actions_4(board: Board):
     # from the middle to out
     if not board.is_column_full(middle):
         yield middle
-    n = max(middle, board.NB_COLUMNS - middle)
-    for i in range(1, n):
-        for column in (middle-i, middle+i):
+    for i in range(1, board.NB_COLUMNS):
+        columns = (middle - i, middle + i)
+        for column in columns:
             if 0 <= column < board.NB_COLUMNS:
                 if not board.is_column_full(column):
                     yield column
 
 
+def board_actions_5(board: Board):
+    """Returns the column based on the last move with a little random."""
+    # get the last action of use the middle column
+    middle = board.get_last_move()
+    if middle is None:
+        middle = board.NB_COLUMNS // 2
+    # from the middle to out
+    if not board.is_column_full(middle):
+        yield middle
+    for i in range(1, board.NB_COLUMNS):
+        columns = [middle - i, middle + i]
+        if randint(0, 1) == 1:
+            columns.reverse()
+        for column in columns:
+            if 0 <= column < board.NB_COLUMNS:
+                if not board.is_column_full(column):
+                    yield column
 
 
 # End Board Actions -------------------
