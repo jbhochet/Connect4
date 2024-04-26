@@ -1,4 +1,5 @@
 from typing import Tuple
+from random import randint
 from math import inf
 from board import Board
 from eval_tools import terminal_test, get_opponent
@@ -27,7 +28,7 @@ def max_value(
         # undo the action
         board.undo()
         # update the best move if the utility is better
-        if v_bis > v:
+        if v_bis > v or (v_bis == v and randint(0,1) == 1):
             v = v_bis
             best_action = action
         # alpha beta cut off
