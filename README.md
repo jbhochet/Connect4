@@ -1,10 +1,10 @@
-# 🟡 Connect4
+# 🔴 Connect4 🟡
 
 A Connect 4 game in the terminal with beautiful color and dangerous AI !
 
 ## 📝 Requirements
 
-In order to run the project, you must have:
+To run the project, you must have :
 
 - Python 3.11+
 
@@ -30,4 +30,4 @@ You can run the game normally with `python3 main.py`, you will have different me
 
 ### 📈 Stats mode
 
-This mode is for test the performance of ours evaluation functions and generate images with pie chart.
+This mode is to test the performance of our evaluation functions and generate images with pie chart.
