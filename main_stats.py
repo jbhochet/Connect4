@@ -83,12 +83,21 @@ parser.add_argument(
     help="The number of game to play for each round.",
 )
 
+# The output image path
+parser.add_argument(
+    "--output",
+    type=str,
+    default="stats.png",
+    help="The path to the generated image.",
+)
+
 # Process Argument -------------------------------------------------------------
 
 args = parser.parse_args()
 
 nb_games = args.nb_games
 ai_level = args.ai_level
+output_path = args.output
 
 # Compute Stats ----------------------------------------------------------------
 
@@ -116,7 +125,7 @@ if ai_level is None:
         x += 1
         y = 0
     fig.suptitle("AI Stats for Connect 4")
-    plt.savefig("stats.png")
+    plt.savefig(output_path)
 else:
     # Stats just on specified
     players = tuple(map(lambda e: get_player(e), ai_level))
@@ -132,4 +141,4 @@ else:
         nb_games,
     )
     fig.suptitle("AI Stats for Connect 4")
-    plt.savefig("stats.png")
+    plt.savefig(output_path)
