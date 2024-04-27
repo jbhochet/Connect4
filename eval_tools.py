@@ -290,14 +290,20 @@ def eval_4(board: Board, symbol: str, depth: int) -> float | int:
                 tmp_score = 0
                 tmp_nb_config = 0
                 # this is a win move!
-                if my_symbol_count == 3 and empty_symbol_count == 1:
+                if my_symbol_count == 4:
+                    tmp_score += f_score(10000, config_distance)
+                    tmp_nb_config += 1
+                elif my_symbol_count == 3 and empty_symbol_count == 1:
                     tmp_score += f_score(1000, config_distance)
                     tmp_nb_config += 1
                 elif my_symbol_count == 2 and empty_symbol_count == 2:
                     tmp_score += f_score(100, config_distance)
                     tmp_nb_config += 1
 
-                if opponent_symbol_count == 3 and empty_symbol_count == 1:
+                if opponent_symbol_count == 4:
+                    tmp_score += f_score(10000, config_distance)
+                    tmp_nb_config += 1
+                elif opponent_symbol_count == 3 and empty_symbol_count == 1:
                     tmp_score -= f_score(1000, config_distance)
                     tmp_nb_config += 1
                 elif opponent_symbol_count == 2 and empty_symbol_count == 2:
