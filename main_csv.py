@@ -1,22 +1,27 @@
 import pandas as pd
+from math import pow
+from random import shuffle
 from player import EvalPlayer
 import eval_tools
 from game import Game
 from board import Board
 from threading import RLock
-from concurrent.futures import ThreadPoolExecutor
+from multiprocessing.pool import ThreadPool
 from time import time
+
 
 # Configuration
 
-EVALS = range(1, 4 + 1)
-BOARD_ACTIONS = range(1, 4 + 1)
-ALGOS = ("AB", "MM")
-DEPTHS = (2, 4, 6)
+EVALS = (2, 3, 4)
+BOARD_ACTIONS = (1, 2, 4)
+ALGOS = ("AB",)
+DEPTHS = (2, 3, 4)
 NB_GAMES = 100
 OUT_CSV = "stats.csv"
 
 # Global variable
+
+TOTAL = int(pow(len(EVALS) * len(BOARD_ACTIONS) * len(ALGOS) * len(DEPTHS), 2))
 
 colum_name_list = ("Al", "Ev", "Ba", "De", "Tm") * 2 + ("win", "draw")
 
@@ -97,13 +102,18 @@ def stats_maker(args):
     )
     with lock:
         df.loc[len(df)] = player_r + (time_r,) + player_y + (times_y,) + (r_win, draw)
+        return f"{len(df)}/{TOTAL} | {player_r} VS {player_y}"
 
 
 # Script ------------------------------------------------------------
 
-with ThreadPoolExecutor() as executor:
-    results = executor.map(stats_maker, players_configs_gen())
-    for result in results:
+args = list(players_configs_gen())
+shuffle(args)
+
+with ThreadPool() as pool:
+    print("START")
+    for result in pool.imap_unordered(stats_maker, args):
         print(result)
+    print("FINISH")
 
 df.to_csv(OUT_CSV)
