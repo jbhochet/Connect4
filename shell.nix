@@ -27,6 +27,7 @@ pkgs.mkShell {
       colorama
       matplotlib
       numpy
+      pandas
     ]))
   ];
 }
