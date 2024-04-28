@@ -1,6 +1,8 @@
 { pkgs ? import <nixpkgs> { } }:
 
 let
+  lib = pkgs.lib;
+
   pythonPackages = pkgs.python3Packages;
 
   colorama = pythonPackages.buildPythonPackage rec {
@@ -14,20 +16,27 @@ let
     };
     nativeBuildInputs = with pythonPackages; [ hatchling ];
   };
-in
 
+  my-packages = with pythonPackages; [
+    pip
+    black
+    snakeviz
+    colorama
+    matplotlib
+    numpy
+    pandas
+  ];
+
+  my-packages-req = map (x: x.pname + "==" + x.version) my-packages;
+in
 pkgs.mkShell {
   name = "Connect 4";
 
   packages = with pkgs; [
-    (pythonPackages.python.withPackages (ps: with ps; [
-      pip
-      black
-      snakeviz
-      colorama
-      matplotlib
-      numpy
-      pandas
-    ]))
+    (pythonPackages.python.withPackages (ps: my-packages))
   ];
+
+  shellHook = ''
+    echo "${lib.concatStringsSep "\n" my-packages-req}" > requirements.txt
+  '';
 }
