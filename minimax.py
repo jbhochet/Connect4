@@ -1,5 +1,6 @@
 from typing import Tuple
 from math import inf
+from random import randint
 from board import Board
 from eval_tools import terminal_test, get_opponent
 
@@ -10,7 +11,9 @@ def minimax(board: Board, symbol: str, depth: int, eval_fx, actions_fx) -> int:
     return best_action
 
 
-def max_value(board: Board, symbol: str, depth: int, eval_fx, actions_fx) -> Tuple[float, int]:
+def max_value(
+    board: Board, symbol: str, depth: int, eval_fx, actions_fx
+) -> Tuple[float, int]:
     # check the terminal test
     if terminal_test(board, depth):
         return eval_fx(board, symbol, depth), 0
@@ -25,14 +28,16 @@ def max_value(board: Board, symbol: str, depth: int, eval_fx, actions_fx) -> Tup
         # undo the action
         board.undo()
         # update the best move if the utility is better
-        if v_bis > v:
+        if v_bis > v or (v_bis == v and randint(0, 1) == 1):
             v = v_bis
             best_action = action
     # return the best action
     return v, best_action
 
 
-def min_value(board: Board, symbol: str, depth: int, eval_fx, actions_fx) -> Tuple[float, int]:
+def min_value(
+    board: Board, symbol: str, depth: int, eval_fx, actions_fx
+) -> Tuple[float, int]:
     # "symbol" here is still the maximizing player.
     # If this config is terminal, we need to evaluate it for this player,
     # *but* knowing that if there is a next move, then it is the opponent's move.
@@ -56,7 +61,7 @@ def min_value(board: Board, symbol: str, depth: int, eval_fx, actions_fx) -> Tup
         # undo the action
         board.undo()
         # update the best move if the utility is better
-        if v_bis < v:
+        if v_bis < v or (v_bis == v and randint(0, 1) == 1):
             v = v_bis
             best_action = action
     # return the best action
