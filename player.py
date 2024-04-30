@@ -63,17 +63,17 @@ class EvalPlayer(Player):
 
 class EasyPlayer(EvalPlayer):
     def __init__(self) -> None:
-        super().__init__("Easy", eval_3, board_actions_4, 2)
+        super().__init__("Easy", eval_3, board_actions_2, 2)
 
 
 class MediumPlayer(EvalPlayer):
     def __init__(self) -> None:
-        super().__init__("Medium", eval_3, board_actions_4, 4)
+        super().__init__("Medium", eval_3, board_actions_2, 4)
 
 
 class HardPlayer(EvalPlayer):
     def __init__(self) -> None:
-        super().__init__("Hard", eval_3, board_actions_4, 6)
+        super().__init__("Hard", eval_3, board_actions_2, 6)
 
 
 # Unused --------------------
