@@ -12,12 +12,12 @@ from time import time
 
 # Configuration
 
-EVALS = (2, 3, 4)
-BOARD_ACTIONS = (1, 2, 4)
-ALGOS = ("AB",)
-DEPTHS = (2, 3, 4)
-NB_GAMES = 100
-OUT_CSV = "stats.csv"
+EVALS = (1, 2,)
+BOARD_ACTIONS = (2,)
+ALGOS = ("AB", "MM")
+DEPTHS = (2, 3, 4,)
+NB_GAMES = 50
+OUT_CSV = "stats2.csv"
 
 # Global variable
 
@@ -110,10 +110,9 @@ def stats_maker(args):
 args = list(players_configs_gen())
 shuffle(args)
 
-with ThreadPool() as pool:
-    print("START")
-    for result in pool.imap_unordered(stats_maker, args):
-        print(result)
-    print("FINISH")
+print("START")
+for config in players_configs_gen():
+    print(stats_maker(config))
+print("FINISH") 
 
 df.to_csv(OUT_CSV)
