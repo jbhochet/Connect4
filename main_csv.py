@@ -6,7 +6,6 @@ import eval_tools
 from game import Game
 from board import Board
 from threading import RLock
-from multiprocessing.pool import ThreadPool
 from time import time
 
 

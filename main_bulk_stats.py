@@ -1,5 +1,5 @@
 # Run all stats in one command!
-# Take a coffe ;)
+# Take a coffee;)
 
 from multiprocessing import Pool
 import subprocess
@@ -19,6 +19,7 @@ EVAL_PREFIX = "eval_"
 BOARD_ACTIONS_PREFIX = "board_actions_"
 PYTHON_BIN = "python3"
 STATS_PY = "main_stats.py"
+
 
 # Utilities ---------------------------
 
@@ -54,10 +55,9 @@ def run_stats(players):
     p = subprocess.run(
         [PYTHON_BIN, STATS_PY, "--ai-level", player1, player2, "--nb-games", str(NB_GAMES), "--output", output_file]
     )
-    diff = time.time() -before
     p.check_returncode()
     with open(output_file + ".txt", mode="w", encoding="utf-8") as f:
-        f.write(str(time.time()-before))
+        f.write(str(time.time() - before))
 
 
 # Script ------------------------------
@@ -65,19 +65,19 @@ def run_stats(players):
 # eval, depth, eval, depth
 games = [
     (1, 6, 1, 3),
-    (1, 3, 1, 6), # fix
+    (1, 3, 1, 6),
     (1, 7, 1, 4),
     (1, 4, 1, 7),
 
     (2, 5, 2, 2),
     (2, 2, 2, 5),
     (2, 6, 2, 3),
-    (2, 3, 3, 6), # fix
+    (2, 3, 3, 6),
 
     (3, 6, 3, 3),
     (3, 3, 3, 6),
     (3, 7, 3, 4),
-    (3, 4, 3, 7), # fix
+    (3, 4, 3, 7),
 
     (4, 5, 4, 2),
     (4, 2, 4, 5),
@@ -105,6 +105,7 @@ games = [
     (4, 5, 3, 5),
 ]
 
+
 def to_config(games):
     # eval, board_action, algo, depth
     add_more = lambda _eval, depth: (_eval, 2, "AB", depth)
@@ -114,6 +115,7 @@ def to_config(games):
         player1_str = player_config_to_str(player1)
         player2_str = player_config_to_str(player2)
         yield player1_str, player2_str
+
 
 os.makedirs(OUT_DIR, exist_ok=True)
 

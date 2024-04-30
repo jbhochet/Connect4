@@ -37,7 +37,7 @@ images with pie charts.
 
 Run `python3 main_stats.py --help` to see all the settings available.
 
-The expression used to describe a player follows this format:
+The string used to describe a player follows this format :
 `eval_X:board_actions_X:depth`
 
-You can add `:m` at the end to use Minimax instead of Alpha Beta.
+You can add `:m` at the end to use minimax instead of alpha-beta.
